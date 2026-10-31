@@ -1,0 +1,29 @@
+/*
+ * THEME LAYER — the only file in the project where raw colors exist.
+ *
+ * Layer 1: raw palette (edit these 3 lines to re-theme the whole site).
+ * Layer 2: semantic tokens, derived from the palette. Components use ONLY these.
+ *
+ * Never import these values into TypeScript. If JS needs a color, read the
+ * CSS variable instead.
+ */
+:root {
+  /* RAW PALETTE: edit these 3 lines to re-theme the whole site */
+  --palette-base: #000000; /* jet black */
+  --palette-secondary: #6d8f63; /* muted moss green */
+  --palette-accent: #39ff88; /* neon emerald green */
+
+  /* SEMANTIC TOKENS: what components actually use (derived from the palette) */
+  --color-background: var(--palette-base);
+  --color-foreground: #e8f5ec; /* readable off-white text */
+  --color-surface: color-mix(in srgb, var(--palette-base) 92%, var(--palette-secondary));
+  --color-border: color-mix(in srgb, var(--palette-secondary) 35%, var(--palette-base));
+  --color-muted: color-mix(in srgb, var(--palette-secondary) 80%, var(--color-foreground));
+  --color-primary: var(--palette-accent);
+  --color-primary-foreground: var(--palette-base);
+  --color-success: var(--palette-accent);
+  --color-warning: #f5c542;
+  --color-danger: #ff5c5c;
+
+  --radius: 0.75rem;
+  }
