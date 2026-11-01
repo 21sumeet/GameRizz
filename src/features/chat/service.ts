@@ -4,7 +4,7 @@
  * There is no LLM call here yet on purpose: the layered architecture says the
  * chat feature owns this orchestration, so the UI already talks to a service
  * instead of inventing replies inline. In Phase 2 this function becomes the
- * real Gemini streaming loop that calls the checker tools.
+ * real AI streaming loop that calls the checker tools.
  */
 const PLACEHOLDER_REPLIES = [
   "lowkey I'm still warming up 🔧 — real brain lands in Phase 2. Drop a game name plus your CPU, GPU and RAM and I'll be ready to cook.",

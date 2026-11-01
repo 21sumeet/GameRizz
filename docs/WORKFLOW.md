@@ -49,7 +49,7 @@ flowchart LR
         Data["Data layer<br/>JSON files today, Postgres later"]
     end
 
-    Ext["☁️ External services<br/>Gemini API, Steam API"]
+    Ext["☁️ External services<br/>Groq API, Steam API"]
 
     User -->|"types a question"| UI
     UI -->|"calls service"| Svc
@@ -94,7 +94,7 @@ flowchart TD
     subgraph L4["Layer 4 — lib/ + config/ + styles/"]
         direction LR
         Repo["data/ repositories"]
-        Ai["ai/ — Gemini client"]
+        Ai["ai/ — Groq client"]
         Steam["steam/ client 🟡"]
         Const["config/ constants"]
         Theme["styles/ theme.css"]
@@ -121,7 +121,7 @@ flowchart TD
 | Features **never import each other** | Sharing happens through `lib/` or a repository, never directly |
 | `lib/` **never imports upward** | Infrastructure stays generic and reusable |
 
-**Why bother?** Because it makes swapping pieces cheap. When JSON storage becomes PostgreSQL, only `lib/data/` changes. When Gemini becomes another provider, only `lib/ai/` changes. No feature or UI code is touched.
+**Why bother?** Because it makes swapping pieces cheap. When JSON storage becomes PostgreSQL, only `lib/data/` changes. When Groq is replaced by another provider, only `.env` (key, base URL, model) changes. No feature or UI code is touched.
 
 ---
 
@@ -144,7 +144,7 @@ sequenceDiagram
     I->>W: onSend(text)
     W->>W: append user bubble, set isThinking = true
     W->>S: await getReply(text)
-    Note over S: Phase 0: canned Gen Z reply<br/>Phase 2: real Gemini call
+    Note over S: Phase 0: canned Gen Z reply<br/>Phase 2: real Groq call
     S-->>W: reply string
     W->>W: append assistant bubble, isThinking = false
     W-->>U: scrolls to newest message
@@ -165,7 +165,7 @@ sequenceDiagram
     participant UI as ChatWindow
     participant R as /api/chat/route.ts
     participant S as chat/service.ts
-    participant L as Gemini<br/>Vercel AI SDK
+    participant L as Groq<br/>OpenAI-compatible API
     participant T as Tools<br/>extractSpecs, checkGame
         participant C as Checker service
 
@@ -253,7 +253,7 @@ flowchart LR
     subgraph Offline["🕐 One-time setup — scripts/generate-embeddings.ts"]
         direction TB
         G1["games.json<br/>50–100 games"] --> Blob["Build text blob<br/>name + genres + tags + description"]
-        Blob --> Emb["Gemini embedding model<br/>text → vector of numbers"]
+        Blob --> Emb["Embedding model (TBD)<br/>text → vector of numbers"]
         Emb --> Store["data/embeddings.json<br/>+ model name"]
     end
 
@@ -416,7 +416,7 @@ flowchart LR
 
 | Term | Plain meaning |
 |---|---|
-| **LLM** | Large Language Model — the text-in, text-out AI (here: Google Gemini) |
+| **LLM** | Large Language Model — the text-in, text-out AI (here: Groq, `qwen/qwen3.8-27b`) |
 | **Embedding** | Text converted into a list of numbers, so "similar meaning" becomes "similar numbers" |
 | **Vector** | That list of numbers |
 | **Cosine similarity** | A $[-1, 1]$ score for how closely two vectors point in the same direction |

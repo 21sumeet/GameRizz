@@ -37,8 +37,11 @@ The chatbot talks in a **Gen Z tone**.
 | Styling | **Tailwind CSS** with a **semantic design-token theme** (Section 5) | DECIDED |
 | Palette | Jet black, muted moss green, neon emerald green | DECIDED (changeable in one file) |
 | Theme mode | Dark-first (palette is dark based). Light mode not planned | DECIDED |
-| AI provider | **Google Gemini** for both chat and embeddings (free tier) | DECIDED |
-| AI SDK | Vercel AI SDK (streaming and tool calling), or Google's SDK directly | DECIDED (agent may pick the simpler one) |
+| AI provider (chat) | **Groq**, OpenAI-compatible API (`https://api.groq.com/openai/v1`) | DECIDED |
+| Chat model | `qwen/qwen3.8-27b` (alt: `openai/gpt-oss-120b`), set in `.env` | DECIDED |
+| AI provider (embeddings) | **Not decided** — Groq has no embeddings endpoint. Needed for Phase 1 | OPEN |
+| AI SDK | Plain `fetch` against the OpenAI-compatible endpoint (no provider SDK) | DECIDED |
+| Provider swappability | Key, base URL, and model id live in `.env`; a provider change is an `.env` edit, not a code change | DECIDED |
 | Data storage (now) | **JSON files only**, behind a repository layer | DECIDED |
 | Data storage (later) | **PostgreSQL**, with **pgvector** preferred over a separate vector DB | Phase 3 |
 | Vector search (now) | Plain JS **cosine similarity** over embeddings stored in JSON | DECIDED |
@@ -49,14 +52,14 @@ The chatbot talks in a **Gen Z tone**.
 | Testing | **Vitest** for pure logic (checker, similarity) | DECIDED |
 
 Notes:
-- Gemini free-tier limits and model names change over time. **Verify current limits and model names in official Google docs before coding.**
-- Optional later alternative for free, offline embeddings: **Transformers.js**.
+- The chat model and its limits change over time. **Verify the active model id in the provider console before coding.**
+- Embeddings are **not** covered by Groq. Phase 1 must choose a source first (a hosted embeddings provider, or a local model).
 
 ## 4. Tech Stack
 
 - Next.js (App Router) + TypeScript (strict)
 - Tailwind CSS
-- Vercel AI SDK with the Google Gemini provider
+- Groq chat completions over its OpenAI-compatible HTTP API (plain `fetch`)
 - Zod (validation)
 - Vitest (unit tests)
 - JSON files in `/data` for now
@@ -126,7 +129,7 @@ Dark, gamer aesthetic: black background, moss green for secondary elements and b
    - `app` can import `features`, `components`, `lib`.
    - `features` can import `lib`, `components/ui`, `config`, `types`, and **not other features** (share through `lib` or the repository layer).
    - `lib` never imports from `features` or `app`.
-4. **Hide external dependencies behind interfaces.** Gemini, Steam, and the data store each sit behind one small module/interface. The rest of the code never calls them directly. This is what makes "swap JSON for Postgres" and "swap Gemini for another provider" low-risk.
+4. **Hide external dependencies behind interfaces.** The AI provider, Steam, and the data store each sit behind one small module/interface. The rest of the code never calls them directly. This is what makes "swap JSON for Postgres" and "swap Groq for another provider" low-risk.
 5. **Pure logic stays pure.** Similarity math, requirement comparison, and name normalization are plain functions with no network or file access, so they are easy to test.
 6. **One concept per file, small files.** If a file passes ~200 lines or mixes concerns, split it.
 
@@ -183,7 +186,7 @@ gamerizz/
 │   │
 │   ├── lib/                       # shared infrastructure, no feature logic
 │   │   ├── ai/
-│   │   │   ├── client.ts          # Gemini client setup (single place)
+│   │   │   ├── client.ts          # Groq (OpenAI-compatible) client setup (single place)
 │   │   │   ├── embeddings.ts      # embedText(), embedMany()
 │   │   │   └── structured.ts      # generic "extract JSON with Zod schema" helper
 │   │   ├── data/                  # repository layer (see below)
@@ -227,7 +230,7 @@ export interface GamesRepository {
 
 ### Config and environment
 - All env vars are read and validated in `src/config/env.ts` using Zod. Nothing else touches `process.env`.
-- `.env.example` documents every variable (e.g. `GEMINI_API_KEY`). `.env.local` is gitignored.
+- `.env.example` documents every variable (e.g. `GROQ_API_KEY`, `GROQ_BASE_URL`, `GROQ_MODEL`). `.env` is gitignored.
 - Constants (embedding model name, result count, Steam timeouts) live in `src/config/constants.ts`, not scattered in code.
 
 ### Conventions
@@ -245,7 +248,7 @@ Given a user's interests, return similar games. Also the learning ground for **e
 
 ### How it works
 1. Each game has a text blob built from: name, genres, tags, description.
-2. That text is turned into a **vector (embedding)** using the Gemini embedding model.
+2. That text is turned into a **vector (embedding)** using an embedding model (provider TBD — see Section 3).
 3. Embeddings are **precomputed by `scripts/generate-embeddings.ts`** and stored in `data/embeddings.json` (not computed on every request).
 4. At query time (`features/recommender/service.ts`):
    - Embed the user's input (e.g. "I loved Hades and Celeste") the same way, or average the vectors of games they named.
@@ -383,13 +386,14 @@ Work **one phase at a time**, confirming with the owner before moving on.
 8. **Handle failures gracefully:** unknown game, unknown hardware, rate limit, empty input. Each yields a friendly in-persona message, not a crash.
 9. **No premature complexity:** no vector DB, auth, or database before the roadmap reaches them. But keep the seams (repositories, interfaces) in place from day one.
 10. **Keep it learnable:** small files, clear names, comments on AI-specific code.
-11. **Verify before relying on:** Gemini model names and limits, and the Steam API shape, can change. Check current docs first.
+11. **Verify before relying on:** the Groq model id, rate limits, and the Steam API shape can change. Check current docs first.
 
 ## 13. Open Items Checklist
 
 - [ ] Owner confirms TypeScript (currently assumed)
 - [ ] Owner confirms the black shade: `#000000` or a softer `#0a0a0a`
-- [ ] Owner creates a Gemini API key (Google AI Studio) and adds it to `.env.local`
+- [x] Owner provides a Groq API key and adds it to `.env`
+- [ ] Choose an embeddings source for Phase 1 (Groq has no embeddings endpoint)
 - [ ] Choose the benchmark data source and the first list of ~40 GPUs and ~30 CPUs
 - [ ] Curate the initial 50 to 100 games list
 
