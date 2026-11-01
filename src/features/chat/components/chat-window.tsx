@@ -46,7 +46,13 @@ export function ChatWindow() {
         ...current,
         { id: crypto.randomUUID(), role: "assistant", content: reply },
       ]);
-    } finally {
+    }catch{
+      setMessages((current) => [
+    ...current,
+    { id: crypto.randomUUID(), role: "assistant", content: "couldn't reach my brain rn 😵 try that again in a sec.",},
+  ]);
+    } 
+    finally {
       setIsThinking(false);
     }
   }

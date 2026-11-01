@@ -5,3 +5,12 @@ export interface ChatMessage {
   role: ChatRole;
   content: string;
 }
+
+/** Wire format for POST /api/chat. */
+export interface ChatRequest {
+  message: string;
+}
+
+export interface ChatResponse {
+  reply: string;
+}
