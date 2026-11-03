@@ -1,10 +1,17 @@
 import type { Game, GameSpecBlock } from "@/types/game";
 import type { UserPcSpecs } from "@/types/pc";
+import type { TieredField } from "@/types/tier";
+import { getTiersRepository } from "@/lib/data/tiers.repository";
 import { normalizeText, tokenize } from "@/lib/utils/text";
 
 export type SpecField = "cpu" | "gpu" | "ramGB" | "storageGB";
 
-export type SpecStatus = "match" | "mismatch" | "unknown";
+/**
+ * "above" and "below" only ever come from the tier tables.
+ * "mismatch" still means exactly what it did before: we could not rank the
+ * chip, and the wording is not one we list.
+ */
+export type SpecStatus = "match" | "above" | "below" | "mismatch" | "unknown";
 
 export interface SpecCheck {
   field: SpecField;
@@ -14,6 +21,10 @@ export interface SpecCheck {
   /** What the catalog asks for, formatted for display. */
   requiredValue: string;
   status: SpecStatus;
+  /** Rank of the user's chip, present only when both sides were rankable. */
+  userTier?: number;
+  /** Rank of the catalog's bar, present only when both sides were rankable. */
+  requiredTier?: number;
 }
 
 export interface CompareResult {
@@ -24,10 +35,12 @@ export interface CompareResult {
   recommended: SpecCheck[];
   /** How many fields the user actually told us about. */
   comparedCount: number;
-  /** True when every spec the user gave matched the minimum block. */
-  matchesMinimum: boolean;
-  /** True only when the game has a recommended block and every given spec matched it. */
-  matchesRecommended: boolean;
+  /** True when every spec the user gave is at or above the listed minimum. */
+  meetsMinimum: boolean;
+  /** True only when the game has a recommended block and every given spec is at or above it. */
+  meetsRecommended: boolean;
+  /** True when at least one given spec ranks below the listed minimum. */
+  isBelowMinimum: boolean;
 }
 
 const LABELS: Record<SpecField, string> = {
@@ -113,7 +126,7 @@ function checkField(
     return {
       ...base,
       userValue: formatNumber(userValue, "GB"),
-      status: userValue >= required ? "match" : "mismatch",
+      status: userValue >= required ? "match" : "below",
     };
   }
 
@@ -122,10 +135,33 @@ function checkField(
     return { ...base, userValue: "", status: "unknown" };
   }
 
+  // TypeScript cannot narrow `field` from the NUMERIC_FIELDS check above
+  // (the array is typed SpecField[]), so we state the fact here.
+  const tiered = field as TieredField;
+  const tiers = getTiersRepository();
+  const userTier = tiers.tierOf(tiered, userValue);
+  const requiredTier = tiers.requiredTierOf(tiered, requiredValue);
+
+  // Both sides ranked: this is a real comparison, not a text match.
+  if (userTier !== null && requiredTier !== null) {
+    const status: SpecStatus =
+      userTier > requiredTier
+        ? "above"
+        : userTier < requiredTier
+          ? "below"
+          : "match";
+
+    return { ...base, userValue, status, userTier, requiredTier };
+  }
+
+  // Fall back to today's exact-words matching (decision D2) and keep
+  // whichever single tier we did manage to find, for context in the facts.
   return {
     ...base,
     userValue,
     status: matchesText(userValue, requiredValue) ? "match" : "mismatch",
+    ...(userTier !== null ? { userTier } : {}),
+    ...(requiredTier !== null ? { requiredTier } : {}),
   };
 }
 
@@ -135,9 +171,27 @@ function runChecks(specs: UserPcSpecs, block: GameSpecBlock): SpecCheck[] {
   );
 }
 
-function allGivenMatch(checks: SpecCheck[]): boolean {
-  const given = checks.filter((check) => check.status !== "unknown");
-  return given.length > 0 && given.every((check) => check.status === "match");
+function givenChecks(checks: SpecCheck[]): SpecCheck[] {
+  return checks.filter((check) => check.status !== "unknown");
+}
+
+/**
+ * "match" and "above" both clear the bar.
+ * "mismatch" deliberately does not count: we could not rank the chip, so we
+ * refuse to claim the user is short. That stays a wording problem, not a
+ * hardware problem.
+ */
+function meetsBar(checks: SpecCheck[]): boolean {
+  const given = givenChecks(checks);
+  return (
+    given.length > 0 &&
+    given.every((check) => check.status === "match" || check.status === "above")
+  );
+}
+
+/** Only true when we positively know a given spec is too weak. */
+function hasBelow(checks: SpecCheck[]): boolean {
+  return givenChecks(checks).some((check) => check.status === "below");
 }
 
 export function countProvidedSpecs(specs: UserPcSpecs): number {
@@ -163,18 +217,32 @@ export function compareRequirements(specs: UserPcSpecs, game: Game): CompareResu
     minimum,
     recommended,
     comparedCount: countProvidedSpecs(specs),
-    matchesMinimum: allGivenMatch(minimum),
-    matchesRecommended: recommendedBlock ? allGivenMatch(recommended) : false,
+    meetsMinimum: meetsBar(minimum),
+    meetsRecommended: recommendedBlock ? meetsBar(recommended) : false,
+    isBelowMinimum: hasBelow(minimum),
   };
 }
+
+const STATUS_WORDS: Record<SpecStatus, string> = {
+  above: "ABOVE",
+  below: "BELOW",
+  match: "EQUALS",
+  mismatch: "does NOT match",
+  unknown: "unknown",
+};
 
 function describeChecks(checks: SpecCheck[]): string[] {
   return checks.map((check) => {
     if (check.status === "unknown") {
       return `- ${check.label}: user did not say (catalog lists ${check.requiredValue})`;
     }
-    const verdict = check.status === "match" ? "matches" : "does NOT match";
-    return `- ${check.label}: user said ${check.userValue} - ${verdict} our listed ${check.requiredValue}`;
+
+    if (check.userTier !== undefined && check.requiredTier !== undefined) {
+      const rank = `rank ${check.userTier} of 9-ish, bar rank ${check.requiredTier}`;
+      return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue} (${rank})`;
+    }
+
+    return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue}`;
   });
 }
 
@@ -220,22 +288,29 @@ export function formatVerdict(result: CompareResult): string {
 
   lines.push("", "VERDICT:");
 
-  if (result.comparedCount === 0) {
+    if (result.comparedCount === 0) {
     lines.push(
       "- The user did not give any specs, so we cannot compare. Ask for CPU, GPU, RAM and free storage.",
     );
-  } else if (result.matchesMinimum && result.matchesRecommended) {
+  } else if (result.isBelowMinimum) {
     lines.push(
-      "- Every spec the user gave matches our listed recommended requirements.",
+      "- At least one spec the user gave ranks BELOW our listed minimum.",
+      "- Say plainly that their PC is under the listed minimum for this game. Be kind about it, but do not hedge.",
+      "- Use only the ABOVE/EQUALS/BELOW marks above. Never invent FPS numbers, settings, or benchmark names.",
     );
-  } else if (result.matchesMinimum) {
+  } else if (result.meetsMinimum && result.meetsRecommended) {
     lines.push(
-      "- Every spec the user gave matches our listed minimum requirements.",
+      "- Every spec the user gave is at or above our listed recommended requirements.",
+    );
+  } else if (result.meetsMinimum) {
+    lines.push(
+      "- Every spec the user gave clears our listed minimum requirements.",
+      "- They do not clear the recommended ones: name the fields marked BELOW in the recommended section above.",
     );
   } else {
     lines.push(
-      "- At least one spec the user gave does not match what we have listed for this game.",
-      "- Important: this means their wording is not in our catalog list, NOT that their PC is too weak. Never say the PC is too weak.",
+      "- At least one spec the user gave could not be ranked and is not wording we list for this game.",
+      "- Say we could not match that spec against our list. Do NOT call their PC too weak.",
     );
   }
 

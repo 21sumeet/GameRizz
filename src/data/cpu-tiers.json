@@ -1,0 +1,67 @@
+{
+  "_note": "CPU rank table. 1 = weakest. Keys are the shortest unambiguous chip name so they also match what users type. Loaded only by src/lib/data/json/tiers.json.repository.ts",
+
+  "Athlon 64 X2 6400": 1,
+  "Phenom 9850": 1,
+  "Core 2 Duo E5200": 1,
+  "Core i3 M380": 1,
+
+  "Core 2 Duo": 2,
+  "Core 2 Duo E8400": 2,
+  "Core 2 Quad Q6600": 2,
+  "Phenom II X4-945": 2,
+  "Core i3-2100": 2,
+  "Core i5-750": 2,
+  "A8-7600": 2,
+
+  "Core i3-3210": 3,
+  "FX-4350": 3,
+  "FX-6300": 3,
+  "A10-7800": 3,
+
+  "Core i3-4150": 4,
+  "FX-6350": 4,
+  "FX-8320": 4,
+  "Core i5-2400": 4,
+  "Core i5-2500K": 4,
+  "Ryzen 3 1200": 4,
+
+  "Core i3-6300": 5,
+  "Core i5-3470": 5,
+  "Core i5-3570K": 5,
+  "Core i5-4460": 5,
+  "Core i7-3770": 5,
+
+  "Core i5-4690": 6,
+  "Core i5-6600": 6,
+  "Core i5-7500": 6,
+  "Ryzen 5 1400": 6,
+  "Ryzen 5 1500X": 6,
+  "Ryzen 5 1600": 6,
+  "Core i7-4770K": 6,
+  "Core i7-4790K": 6,
+
+  "Core i7-6700": 7,
+  "Core i7-6700K": 7,
+  "Ryzen 7 1800X": 7,
+  "Core i5-8400": 7,
+  "Core i7-6800K": 7,
+
+  "Ryzen 5 2600X": 8,
+  "Ryzen 3 3300X": 8,
+  "Ryzen 5 3600": 8,
+  "Ryzen 5 3600X": 8,
+  "Ryzen 5 5500": 8,
+  "Core i7-8700": 8,
+  "Core i7-8700K": 8,
+
+  "Core i5-10600K": 9,
+  "Core i7-9700": 9,
+  "Core i7-9700K": 9,
+  "Core i9-9900K": 9,
+  "Ryzen 7 3700X": 9,
+
+  "Core i5-12400": 10,
+  "Core i7-12700": 11,
+  "Ryzen 7 7800X3D": 12
+}
