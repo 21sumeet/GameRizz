@@ -17,6 +17,7 @@ const ALIASES: Record<string, string> = {
   gta: "grand-theft-auto-v",
   "gta 5": "grand-theft-auto-v",
   "gta v": "grand-theft-auto-v",
+  "gta5": "grand-theft-auto-v",
   bg3: "baldurs-gate-3",
   "baldurs gate": "baldurs-gate-3",
   skyrim: "skyrim-special-edition",

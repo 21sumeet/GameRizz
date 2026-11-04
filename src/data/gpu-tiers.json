@@ -1,6 +1,13 @@
 {
   "_note": "GPU rank table. 1 = weakest. Keys are the shortest unambiguous chip name so they also match what users type. Loaded only by src/lib/data/json/tiers.json.repository.ts",
-
+  
+  "Intel HD Graphics": 1,
+  "Intel Iris": 1,
+  "Intel UHD 620": 1,
+  "Intel UHD 630": 1,
+  "Intel UHD 770": 1,
+  "Radeon Vega 8": 1,
+  "Radeon Vega 11": 1,
   "Intel HD Graphics 4000": 1,
   "Radeon R5": 1,
   "GeForce 6600": 1,
@@ -13,6 +20,8 @@
   "Radeon 5570": 1,
   "Radeon HD 5670": 1,
 
+  "Intel Iris Plus": 2,
+  "Radeon Vega 7": 2,
   "GeForce 9800 GT": 2,
   "GeForce 9800GTX": 2,
   "GTX 260": 2,
@@ -20,13 +29,15 @@
   "Radeon HD 7730": 2,
   "Radeon HD 4870": 2,
   "GeForce 450": 2,
-
+  
+  "Intel Iris Xe": 3,
   "GTX 560": 3,
   "R7 260X": 3,
   "GTX 750 Ti": 3,
   "GTX 470": 3,
   "GTX 660": 3,
 
+  "Radeon 680M": 4,
   "Radeon HD 7870": 4,
   "GTX 760": 4,
   "GTX 770": 4,
@@ -40,7 +51,10 @@
   "Radeon HD 7950": 4,
   "Radeon HD 7970": 4,
   "Radeon 7970": 4,
+  "GTX 1650": 4,
 
+  "Radeon 780M": 5,
+   "GTX 1660": 5,
   "GTX 780": 5,
   "R9 290": 5,
   "RX 470": 5,
@@ -55,16 +69,23 @@
   "GTX 1070": 6,
   "RX Vega 56": 6,
   "GTX 1070 Ti": 6,
-
+  
+  "GTX 1080": 7,
   "RTX 2060": 7,
   "RX 5700": 7,
   "RTX 2060 Super": 7,
   "RX 5700 XT": 7,
   "RX 6600 XT": 7,
+  "RX 6600": 7,
 
   "GTX 1080 Ti": 8,
   "GeForce 1080 Ti": 8,
   "RTX 2080": 8,
+  "RTX 2070": 8,
+  "RTX 3060": 8,
+  "RTX 3070": 8,
+  "RTX 4060": 8,
+  "RX 6700 XT": 8,
 
   "RX 6800 XT": 9
 }
