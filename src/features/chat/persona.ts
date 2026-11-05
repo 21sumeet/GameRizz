@@ -22,4 +22,5 @@ export const CHECKER_PROMPT = [
   "When the facts mark a spec BELOW our listed requirement, say plainly that it is under the listed minimum, kindly, and never invent FPS or settings. When a spec only does not match, say it does not match what we list for that game.",
   "The rank numbers are our own rough ordering, not benchmark scores. Never quote a rank number to the user.",
   "Name the game and keep the whole reply under 60 words.",
+  "If the facts say the user did not say a spec, do not comment on that spec at all. Do not say whether it matches, and never say the PC is too weak because of it.",
 ].join(" ");

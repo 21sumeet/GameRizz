@@ -1,6 +1,6 @@
 import catalog from "@/data/games.json";
 import type { Game } from "@/types/game";
-import { normalizeText } from "@/lib/utils/text";
+import { compact, normalizeText, tokenize } from "@/lib/utils/text";
 
 const games = catalog as unknown as Game[];
 
@@ -50,16 +50,9 @@ const ALIASES: Record<string, string> = {
 
 /** "Hades II" must not bind to "Hades" — the catalog only has the first game. */
 const SEQUEL_TOKENS = new Set([
-  "ii",
-  "iii",
-  "iv",
-  "2",
-  "3",
-  "4",
-  "5",
-  "remake",
-  "remastered",
-  "definitive",
+  "ii", "iii", "iv",
+  "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+  "remake", "remastered", "definitive",
 ]);
 
 interface SearchTerm {
@@ -70,11 +63,19 @@ interface SearchTerm {
 const byName = new Map<string, Game>();
 const searchTerms: SearchTerm[] = [];
 
+/** The same terms with spaces removed, so "gta 5" and "gta5" collide. */
+const compactByName = new Map<string, Game>();
+
 function register(phrase: string, game: Game) {
   const normalized = normalizeText(phrase);
   if (normalized.length === 0) return;
 
   if (!byName.has(normalized)) byName.set(normalized, game);
+
+  const squashed = compact(phrase);
+  if(squashed.length >0 && !compactByName.has(squashed)){
+    compactByName.set(squashed, game);
+  }
   searchTerms.push({ phrase: normalized, game });
 }
 
@@ -90,6 +91,30 @@ for (const [alias, id] of Object.entries(ALIASES)) {
 
 // Longest phrase first, so "baldur s gate 3" wins before "gate".
 searchTerms.sort((a, b) => b.phrase.length - a.phrase.length);
+
+function nextWordIsSequel(haystack: string, from: number): boolean {
+  const rest = haystack.slice(from).trimStart();
+  return SEQUEL_TOKENS.has(rest.split(" ")[0] ?? "");
+}
+
+//Finds a game by gluing the user's words together, so "gta 5", "gta5" and "gtav" all match. 
+const MAX_JOINED_WORDS = 4;
+function findByCompactWords(text: string): Game | null {
+  const words = tokenize(text);
+
+  for (let size = MAX_JOINED_WORDS; size >= 1; size -= 1) {
+    for (let start = 0; start + size <= words.length; start += 1) {
+      const joined = words.slice(start, start + size).join("");
+      const game = compactByName.get(joined);
+      if (!game) continue;
+      if (SEQUEL_TOKENS.has(words[start + size] ?? "")) continue;
+
+      return game;
+    }
+  }
+
+  return null;
+}
 
 export const jsonGamesRepository = {
   getAll(): Game[] {
@@ -107,14 +132,11 @@ export const jsonGamesRepository = {
     for (const term of searchTerms) {
       const at = haystack.indexOf(` ${term.phrase} `);
       if (at === -1) continue;
-
-      const rest = haystack.slice(at + term.phrase.length + 2).trimStart();
-      const nextWord = rest.split(" ")[0] ?? "";
-      if (SEQUEL_TOKENS.has(nextWord)) continue;
+      if (nextWordIsSequel(haystack, at + term.phrase.length + 2)) continue;
 
       return term.game;
     }
 
-    return null;
+    return findByCompactWords(text);
   },
 };

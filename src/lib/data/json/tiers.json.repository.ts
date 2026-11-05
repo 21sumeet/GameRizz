@@ -102,6 +102,29 @@ function rankOf(index: TierIndex, chipName: string): number | null {
     if (tier !== undefined) return tier;
   }
 
+  return rankByDigits(index, chipName);
+}
+
+/**
+ * Last resort for a mistyped brand word: "rtc 3050" still carries "3050", and
+ * the number is what actually identifies the card. We require an exact digit
+ * signature and at least one 3+ digit group, so a bare "i5" can never pin a
+ * chip down on its own.
+ */
+function rankByDigits(index: TierIndex, chipName: string): number | null {
+  const wanted = normalizeText(chipName).match(/\d+/g) ?? [];
+  if (wanted.length === 0) return null;
+  if (!wanted.some((group) => group.length >= 3)) return null;
+
+  for (const key of index.keys) {
+    const keyDigits = normalizeText(key).match(/\d+/g) ?? [];
+    if (keyDigits.length !== wanted.length) continue;
+    if (!keyDigits.every((group, at) => group === wanted[at])) continue;
+
+    const tier = index.tierOfKey.get(key);
+    if (tier !== undefined) return tier;
+  }
+
   return null;
 }
 

@@ -11,6 +11,11 @@ export function normalizeText(value: string): string {
     .trim();
 }
 
+/** normalizeText() with the spaces squeezed out: "gta 5" -> "gta5", "gta v" -> "gtav". */
+export function compact(value : string){
+  return normalizeText(value).replace(/ /g, "");   //remove all space char form string
+}
+
 /** normalizeText() split into words. */
 export function tokenize(value: string): string[] {
   const normalized = normalizeText(value);
