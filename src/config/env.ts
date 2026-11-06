@@ -17,3 +17,11 @@ export function groqConfig() {
     baseUrl: requireEnv("GROQ_BASE_URL"),
   };
 }
+
+export function googleEmbeddingConfig(){
+  return{
+    apiKey: requireEnv("GOOGLE_API_KEY"),
+    model: requireEnv("GOOGLE_EMBEDDING_MODEL"),
+    baseUrl: requireEnv("GOOGLE_EMBEDDING_BASE_URL"),
+  }
+}
