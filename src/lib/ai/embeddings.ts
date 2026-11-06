@@ -1,23 +1,28 @@
 import { googleEmbeddingConfig } from "@/config/env";
-import { EMBEDDING_DIMENSIONS, EMBEDDING_TASK_TYPE } from "@/config/constants";
+import {
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_TASK_TYPES,
+  type EmbeddingTaskType,
+} from "@/config/constants";
 
-// Google's embedContent returns one vector under `embedding.values`. */
+/** Google's embedContent returns one vector under `embedding.values`. */
 interface EmbedContentResponse {
   embedding?: { values?: number[] };
 }
 
 export interface EmbedTextOptions {
-  /** RETRIEVAL_DOCUMENT for games, RETRIEVAL_QUERY for user input (Phase 1). */
-  taskType?: string;
+  /** Game text → "RETRIEVAL_DOCUMENT". User input → "RETRIEVAL_QUERY". */
+  taskType?: EmbeddingTaskType;
 }
 
 /**
- * The only place text becomes a vector. Same model and task type for games and queries,
- * otherwise similarity scores are meaningless.
+ * The only place text becomes a vector.
+ * Callers must pass the task type that matches what the text is,
+ * otherwise the stored and queried vectors are not comparable.
  */
 export async function embedText(
   text: string,
-  { taskType = EMBEDDING_TASK_TYPE }: EmbedTextOptions = {},
+  { taskType = EMBEDDING_TASK_TYPES.document }: EmbedTextOptions = {},
 ): Promise<number[]> {
   if (text.trim().length === 0) {
     throw new Error("embedText: text must not be empty");
