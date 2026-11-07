@@ -9,6 +9,7 @@
     "lint": "eslint",
     "embed:smoke": "tsx --env-file=.env scripts/smoke-embed.ts",
     "embed:generate": "tsx --env-file=.env scripts/generate-embeddings.ts",
+    "embed:check": "tsx --env-file=.env scripts/check-similarity.ts",
     "test": "vitest",
     "test:run": "vitest run"
   },
