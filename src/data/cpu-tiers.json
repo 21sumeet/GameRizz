@@ -5,6 +5,15 @@
   "Phenom 9850": 1,
   "Core 2 Duo E5200": 1,
   "Core i3 M380": 1,
+  "Pentium III": 1,
+  "Pentium 4": 1,
+  "Athlon XP 2800+": 1,
+  "Athlon 64 3000+": 1,
+  "Athlon 64 3200+": 1,
+  "Athlon 64 3500+": 1,
+  "Athlon X2 4800+": 1,
+  "Core 2 Duo E6300": 1,
+  
 
   "Core 2 Duo": 2,
   "Core 2 Duo E8400": 2,
@@ -13,6 +22,9 @@
   "Core i3-2100": 2,
   "Core i5-750": 2,
   "A8-7600": 2,
+  "Phenom II X4 940": 2,
+  "Phenom II X4 955": 2,
+  
 
   "Core i3-3210": 3,
   "FX-4350": 3,
@@ -25,6 +37,9 @@
   "Core i5-2400": 4,
   "Core i5-2500K": 4,
   "Ryzen 3 1200": 4,
+  "Core i5-2300": 4,
+  "FX-8350": 4,
+  
 
   "Core i3-6300": 5,
   "Core i5-3470": 5,
@@ -46,6 +61,7 @@
   "Ryzen 7 1800X": 7,
   "Core i5-8400": 7,
   "Core i7-6800K": 7,
+  "Core i7-3930K": 7,
 
   "Core i5-10400": 8,
   "Core i5-10500": 8,

@@ -46,6 +46,27 @@ const ALIASES: Record<string, string> = {
   fh5: "forza-horizon-5",
   hogwarts: "hogwarts-legacy",
   portal2: "portal-2",
+  
+  // BioShock (2007)
+  "bioshock 1": "bioshock",
+  "bioshock original": "bioshock",
+
+  // Fallout New Vegas
+  "fallout nv": "fallout-new-vegas",
+  "fnv": "fallout-new-vegas",
+  "new vegas": "fallout-new-vegas",
+
+  // Fallout 3
+  "fo3": "fallout-3",
+
+  // Left 4 Dead 2
+  "l4d2": "left-4-dead-2",
+  "left4dead2": "left-4-dead-2",
+
+  // Call of Duty Modern Warfare 2 (2009)
+  "cod mw2": "call-of-duty-modern-warfare-2-2009",
+  "mw2 2009": "call-of-duty-modern-warfare-2-2009",
+  "modern warfare 2 2009": "call-of-duty-modern-warfare-2-2009"
 };
 
 /** "Hades II" must not bind to "Hades" — the catalog only has the first game. */

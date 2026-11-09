@@ -688,5 +688,633 @@
     },
     "source": "manual",
     "specsVerified": false
+  },
+  {
+    "id": "metal-gear-solid-v-the-phantom-pain",
+    "name": "Metal Gear Solid V: The Phantom Pain",
+    "steamAppId": 287700,
+    "releaseYear": 2015,
+    "developer": "Kojima Productions",
+    "publisher": "Konami",
+    "genres": ["Action-Adventure", "Stealth", "Open World"],
+    "tags": ["Tactical Stealth", "Military", "Open World", "Story Rich", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "A tactical stealth action game set in an open world. Plan missions, infiltrate enemy bases, rescue targets and build your own private military force.",
+    "rating": 93,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core i5-4460 / AMD FX-6300",
+        "gpu": "NVIDIA GeForce GTX 650 / AMD Radeon HD 7870",
+        "ramGB": 4,
+        "storageGB": 28
+      },
+      "recommended": {
+        "cpu": "Intel Core i7-4790 / AMD FX-8350",
+        "gpu": "NVIDIA GeForce GTX 760 / AMD Radeon R9 280X",
+        "ramGB": 8,
+        "storageGB": 28
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "the-elder-scrolls-v-skyrim",
+    "name": "The Elder Scrolls V: Skyrim (2011)",
+    "steamAppId": 72850,
+    "releaseYear": 2011,
+    "developer": "Bethesda Game Studios",
+    "publisher": "Bethesda Softworks",
+    "genres": ["Action RPG", "Open World", "Fantasy"],
+    "tags": ["Open World", "Fantasy", "Exploration", "Dragons", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "An open-world fantasy RPG where you explore the vast land of Skyrim, complete quests, fight dragons and shape your character through countless adventures.",
+    "rating": 94,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo E4400 / AMD Athlon X2 2.8 GHz",
+        "gpu": "NVIDIA GeForce 8800 GT / AMD Radeon HD 3850",
+        "ramGB": 2,
+        "storageGB": 6
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Quad Q6600 / AMD Phenom X4",
+        "gpu": "NVIDIA GeForce GTX 260 / AMD Radeon HD 4890",
+        "ramGB": 4,
+        "storageGB": 6
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "batman-arkham-city",
+    "name": "Batman: Arkham City",
+    "steamAppId": 200260,
+    "releaseYear": 2011,
+    "developer": "Rocksteady Studios",
+    "publisher": "Warner Bros. Interactive Entertainment",
+    "genres": ["Action-Adventure", "Open World", "Superhero"],
+    "tags": ["Superhero", "Stealth", "Combat", "Open World", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Play as Batman in a massive open-world Gotham prison district. Investigate crimes, fight iconic villains and use gadgets and stealth to protect the city.",
+    "rating": 94,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 4800+",
+        "gpu": "NVIDIA GeForce 8800 GT / AMD Radeon HD 3850",
+        "ramGB": 2,
+        "storageGB": 17
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Quad 2.4 GHz / AMD Phenom X4",
+        "gpu": "NVIDIA GeForce GTX 460 / AMD Radeon HD 6850",
+        "ramGB": 4,
+        "storageGB": 17
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "bioshock-infinite",
+    "name": "BioShock Infinite",
+    "steamAppId": 8870,
+    "releaseYear": 2013,
+    "developer": "Irrational Games",
+    "publisher": "2K",
+    "genres": ["First-Person Shooter", "Action", "Adventure"],
+    "tags": ["Story Rich", "Narrative", "Atmospheric", "Sci-Fi", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "A narrative-driven shooter set in the floating city of Columbia. Follow Booker DeWitt as he searches for Elizabeth and uncovers the city's mysterious secrets.",
+    "rating": 94,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 2.7 GHz",
+        "gpu": "NVIDIA GeForce 8600 GT / AMD Radeon HD 2600 XT",
+        "ramGB": 2,
+        "storageGB": 20
+      },
+      "recommended": {
+        "cpu": "Quad Core Processor",
+        "gpu": "NVIDIA GeForce GTX 560 / AMD Radeon HD 6950",
+        "ramGB": 4,
+        "storageGB": 20
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "dead-space-2",
+    "name": "Dead Space 2",
+    "steamAppId": 47780,
+    "releaseYear": 2011,
+    "developer": "Visceral Games",
+    "publisher": "Electronic Arts",
+    "genres": ["Survival Horror", "Third-Person Shooter", "Sci-Fi"],
+    "tags": ["Horror", "Sci-Fi", "Survival", "Atmospheric", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Return as Isaac Clarke in a terrifying sci-fi horror adventure. Survive terrifying creatures, manage limited resources and uncover the truth behind the mysterious Marker.",
+    "rating": 90,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 2.8 GHz / AMD Athlon 64 3000+",
+        "gpu": "NVIDIA GeForce 6800 / ATI X1600 Pro",
+        "ramGB": 1,
+        "storageGB": 10
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2",
+        "gpu": "NVIDIA GeForce 8800 GT / ATI Radeon HD 3850",
+        "ramGB": 2,
+        "storageGB": 10
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "tomb-raider-2013",
+    "name": "Tomb Raider (2013)",
+    "steamAppId": 203160,
+    "releaseYear": 2013,
+    "developer": "Crystal Dynamics",
+    "publisher": "Square Enix",
+    "genres": ["Action-Adventure", "Survival", "Exploration"],
+    "tags": ["Adventure", "Survival", "Exploration", "Story Rich", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Experience Lara Croft's origin story as she survives a dangerous island, solves ancient mysteries and fights hostile enemies to escape.",
+    "rating": 95,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo E6300 / AMD Athlon 64 X2 4600+",
+        "gpu": "NVIDIA GeForce 8600 GT / AMD Radeon HD 2600 XT",
+        "ramGB": 1,
+        "storageGB": 12
+      },
+      "recommended": {
+        "cpu": "Intel Core i5-750 / AMD Phenom II X4 955",
+        "gpu": "NVIDIA GeForce GTX 480 / AMD Radeon HD 5870",
+        "ramGB": 4,
+        "storageGB": 12
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "max-payne-3",
+    "name": "Max Payne 3",
+    "steamAppId": 204100,
+    "releaseYear": 2012,
+    "developer": "Rockstar Studios",
+    "publisher": "Rockstar Games",
+    "genres": ["Third-Person Shooter", "Action", "Crime"],
+    "tags": ["Bullet Time", "Crime", "Cinematic", "Story Rich", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Follow former detective Max Payne through a violent journey in São Paulo. Experience cinematic gunfights, bullet-time combat and a dark story of revenge and redemption.",
+    "rating": 87,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 2.6 GHz",
+        "gpu": "NVIDIA GeForce 8600 GT / ATI Radeon HD 3400",
+        "ramGB": 2,
+        "storageGB": 35
+      },
+      "recommended": {
+        "cpu": "Intel Core i7 3930K / AMD FX-8350",
+        "gpu": "NVIDIA GeForce GTX 680 / AMD Radeon HD 7970",
+        "ramGB": 16,
+        "storageGB": 35
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "deus-ex-human-revolution",
+    "name": "Deus Ex: Human Revolution",
+    "steamAppId": 238010,
+    "releaseYear": 2011,
+    "developer": "Eidos-Montréal",
+    "publisher": "Square Enix",
+    "genres": ["Action RPG", "Stealth", "Cyberpunk"],
+    "tags": ["Cyberpunk", "Stealth", "Choices Matter", "Hacking", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Step into the role of Adam Jensen, a security specialist enhanced with cybernetic abilities. Explore a futuristic world where stealth, combat and player choices shape your journey.",
+    "rating": 91,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 2 GHz / AMD Athlon X2 2 GHz",
+        "gpu": "NVIDIA GeForce 8000 Series / ATI Radeon HD 2000 Series",
+        "ramGB": 2,
+        "storageGB": 17
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Quad / AMD Phenom X4",
+        "gpu": "NVIDIA GeForce GTX 260 / AMD Radeon HD 4870",
+        "ramGB": 4,
+        "storageGB": 17
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "grand-theft-auto-san-andreas",
+    "name": "Grand Theft Auto: San Andreas",
+    "steamAppId": 12120,
+    "releaseYear": 2005,
+    "developer": "Rockstar North",
+    "publisher": "Rockstar Games",
+    "genres": ["Open World", "Action-Adventure", "Crime"],
+    "tags": ["Open World", "Crime", "Driving", "Exploration", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Return to San Andreas as CJ, exploring three major cities in a massive crime sandbox. Complete missions, drive vehicles and build your influence across the state.",
+    "rating": 93,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium III 1 GHz / AMD Athlon 1 GHz",
+        "gpu": "64 MB DirectX 9 compatible graphics card",
+        "ramGB": 0.256,
+        "storageGB": 5
+      },
+      "recommended": {
+        "cpu": "Intel Pentium 4 2 GHz / AMD Athlon XP 2000+",
+        "gpu": "NVIDIA GeForce 3 / ATI Radeon 8500",
+        "ramGB": 0.512,
+        "storageGB": 5
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "sleeping-dogs-definitive-edition",
+    "name": "Sleeping Dogs (Definitive Edition - Tweaked)",
+    "steamAppId": 307690,
+    "releaseYear": 2014,
+    "developer": "United Front Games",
+    "publisher": "Square Enix",
+    "genres": ["Open World", "Action-Adventure", "Crime"],
+    "tags": ["Open World", "Crime", "Martial Arts", "Police", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Explore the streets of Hong Kong as undercover detective Wei Shen. Infiltrate criminal gangs through intense martial arts combat, dangerous missions and an engaging crime story.",
+    "rating": 92,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 2.7 GHz",
+        "gpu": "NVIDIA GeForce 8800 GT / AMD Radeon HD 3870",
+        "ramGB": 4,
+        "storageGB": 20
+      },
+      "recommended": {
+        "cpu": "Intel Core i5-2300 / AMD Phenom II X4 940",
+        "gpu": "NVIDIA GeForce GTX 560 / AMD Radeon HD 6950",
+        "ramGB": 8,
+        "storageGB": 20
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "far-cry-2",
+    "name": "Far Cry 2",
+    "steamAppId": 19900,
+    "releaseYear": 2008,
+    "developer": "Ubisoft Montreal",
+    "publisher": "Ubisoft",
+    "genres": ["Open World", "First-Person Shooter", "Action"],
+    "tags": ["Open World", "Military", "Survival", "Tactical Shooter", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Survive in a dangerous African war zone as a mercenary hunting an arms dealer. Explore an open world, manage resources and fight through unpredictable combat encounters.",
+    "rating": 85,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 3.2 GHz / AMD Athlon 64 3500+",
+        "gpu": "NVIDIA GeForce 6800 / ATI Radeon X1650",
+        "ramGB": 1,
+        "storageGB": 3
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.66 GHz / AMD Athlon X2 5200+",
+        "gpu": "NVIDIA GeForce 8600 GTS / ATI Radeon HD 2600",
+        "ramGB": 2,
+        "storageGB": 3
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "assassins-creed-2",
+    "name": "Assassin's Creed II",
+    "steamAppId": 33230,
+    "releaseYear": 2009,
+    "developer": "Ubisoft Montreal",
+    "publisher": "Ubisoft",
+    "genres": ["Action-Adventure", "Open World", "Historical"],
+    "tags": ["Historical", "Stealth", "Parkour", "Assassins", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Experience Ezio Auditore's journey through Renaissance Italy. Explore historic cities, perform stealth assassinations and uncover the secrets of an ancient conflict.",
+    "rating": 91,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 1.8 GHz / AMD Athlon X2 64 2 GHz",
+        "gpu": "NVIDIA GeForce 7900 GS / ATI Radeon HD 2600 XT",
+        "ramGB": 1.5,
+        "storageGB": 8
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 64 2.4 GHz",
+        "gpu": "NVIDIA GeForce 8800 GT / ATI Radeon HD 4700",
+        "ramGB": 2,
+        "storageGB": 8
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "assassins-creed-brotherhood",
+    "name": "Assassin's Creed: Brotherhood",
+    "steamAppId": 48190,
+    "releaseYear": 2010,
+    "developer": "Ubisoft Montreal",
+    "publisher": "Ubisoft",
+    "genres": ["Action-Adventure", "Open World", "Historical"],
+    "tags": ["Historical", "Stealth", "Parkour", "Assassins", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer"],
+    "description": "Continue Ezio's story in Renaissance Rome. Build and lead an assassin brotherhood, take down the Templar influence and explore a richly detailed historical city.",
+    "rating": 89,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 1.8 GHz / AMD Athlon X2 64 2 GHz",
+        "gpu": "NVIDIA GeForce 7900 GS / ATI Radeon HD 2600 XT",
+        "ramGB": 1.5,
+        "storageGB": 8
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 64 2.4 GHz",
+        "gpu": "NVIDIA GeForce 8800 GT / ATI Radeon HD 4700",
+        "ramGB": 2,
+        "storageGB": 8
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "mass-effect-2",
+    "name": "Mass Effect 2 (Original 2010)",
+    "steamAppId": 24980,
+    "releaseYear": 2010,
+    "developer": "BioWare",
+    "publisher": "Electronic Arts",
+    "genres": ["Sci-Fi RPG", "Action", "Third-Person Shooter"],
+    "tags": ["Sci-Fi", "Story Rich", "Choices Matter", "Space", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Lead Commander Shepard and assemble an elite team for a dangerous suicide mission. Your choices, relationships and decisions shape the story and the fate of the galaxy.",
+    "rating": 94,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Core 2 Duo 1.8 GHz / AMD Athlon X2 64 2 GHz",
+        "gpu": "NVIDIA GeForce 6800 GT / ATI Radeon X1600 Pro",
+        "ramGB": 1.5,
+        "storageGB": 15
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.6 GHz / AMD Athlon X2 64 2.4 GHz",
+        "gpu": "NVIDIA GeForce 7900 GTX / ATI Radeon HD 2900 XT",
+        "ramGB": 2,
+        "storageGB": 15
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "bioshock",
+    "name": "BioShock (Original 2007)",
+    "steamAppId": 7670,
+    "releaseYear": 2007,
+    "developer": "2K Boston",
+    "publisher": "2K",
+    "genres": ["First-Person Shooter", "Action", "Sci-Fi"],
+    "tags": ["Atmospheric", "Story Rich", "Horror", "Underwater", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Descend into Rapture, an underwater city filled with dangerous inhabitants and dark secrets. Combine weapons and genetic abilities to survive this atmospheric sci-fi shooter.",
+    "rating": 96,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 2.4 GHz / AMD Athlon 64 2.4 GHz",
+        "gpu": "NVIDIA GeForce 6600 / ATI Radeon X1300",
+        "ramGB": 1,
+        "storageGB": 8
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2",
+        "gpu": "NVIDIA GeForce 7900 GT / ATI Radeon X1900",
+        "ramGB": 2,
+        "storageGB": 8
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "fallout-new-vegas",
+    "name": "Fallout: New Vegas",
+    "steamAppId": 22380,
+    "releaseYear": 2010,
+    "developer": "Obsidian Entertainment",
+    "publisher": "Bethesda Softworks",
+    "genres": ["Open World", "Post-Apocalyptic RPG", "Action RPG"],
+    "tags": ["Post-Apocalyptic", "Open World", "Choices Matter", "Exploration", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Explore the Mojave Wasteland in a post-apocalyptic RPG where factions, choices and consequences shape your journey through the desert.",
+    "rating": 96,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Dual Core 2 GHz / AMD equivalent",
+        "gpu": "NVIDIA GeForce 6600 GT / ATI Radeon 1300 XT",
+        "ramGB": 2,
+        "storageGB": 10
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Quad 2.5 GHz / AMD Phenom X4",
+        "gpu": "NVIDIA GeForce 8800 GTX / ATI Radeon HD 3870",
+        "ramGB": 2,
+        "storageGB": 10
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "fallout-3",
+    "name": "Fallout 3",
+    "steamAppId": 22300,
+    "releaseYear": 2008,
+    "developer": "Bethesda Game Studios",
+    "publisher": "Bethesda Softworks",
+    "genres": ["Open World", "Post-Apocalyptic RPG", "Action RPG"],
+    "tags": ["Post-Apocalyptic", "Open World", "Exploration", "Choices Matter", "Singleplayer"],
+    "modes": ["singleplayer"],
+    "description": "Step into the Capital Wasteland in a post-apocalyptic open-world RPG. Explore ruined Washington, fight dangerous creatures and uncover the mystery of your father's disappearance.",
+    "rating": 91,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 2.4 GHz / AMD Athlon XP 2800+",
+        "gpu": "NVIDIA GeForce 6800 / ATI Radeon X850",
+        "ramGB": 1,
+        "storageGB": 7
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2",
+        "gpu": "NVIDIA GeForce 8800 / ATI Radeon HD 3800",
+        "ramGB": 2,
+        "storageGB": 7
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "left-4-dead-2",
+    "name": "Left 4 Dead 2",
+    "steamAppId": 550,
+    "releaseYear": 2009,
+    "developer": "Valve",
+    "publisher": "Valve",
+    "genres": ["Co-op Shooter", "Zombie", "First-Person Shooter"],
+    "tags": ["Co-op", "Zombies", "Survival", "Multiplayer", "Action"],
+    "modes": ["singleplayer", "multiplayer", "co-op"],
+    "description": "Team up with friends to survive zombie-infested environments. Fight through campaigns filled with infected enemies, powerful special zombies and intense cooperative action.",
+    "rating": 97,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 3 GHz",
+        "gpu": "NVIDIA GeForce 6600 / ATI Radeon X800",
+        "ramGB": 2,
+        "storageGB": 13
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz",
+        "gpu": "NVIDIA GeForce 7600 / ATI Radeon X1600",
+        "ramGB": 2,
+        "storageGB": 13
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
+  },
+  {
+    "id": "call-of-duty-modern-warfare-2-2009",
+    "name": "Call of Duty: Modern Warfare 2 (2009)",
+    "steamAppId": 10180,
+    "releaseYear": 2009,
+    "developer": "Infinity Ward",
+    "publisher": "Activision",
+    "genres": ["First-Person Shooter", "Military", "Action"],
+    "tags": ["Military", "Campaign", "Action", "Modern Warfare", "Singleplayer"],
+    "modes": ["singleplayer", "multiplayer", "co-op"],
+    "description": "Join Task Force 141 in a cinematic military shooter featuring an intense campaign, memorable missions and fast-paced multiplayer combat.",
+    "rating": 94,
+    "popular": true,
+    "playableOn": "low_end",
+    "recommendedTier": "low_end",
+    "requiresSSD": false,
+    "requirements": {
+      "minimum": {
+        "cpu": "Intel Pentium 4 3 GHz / AMD Athlon 64 3200+",
+        "gpu": "NVIDIA GeForce 6600 GT / ATI Radeon 1600 XT",
+        "ramGB": 1,
+        "storageGB": 12
+      },
+      "recommended": {
+        "cpu": "Intel Core 2 Duo 2.4 GHz / AMD Athlon X2 4800+",
+        "gpu": "NVIDIA GeForce 8600 GT / ATI Radeon X1950",
+        "ramGB": 2,
+        "storageGB": 12
+      }
+    },
+    "source": "manual",
+    "specsVerified": false
   }
+
 ]
