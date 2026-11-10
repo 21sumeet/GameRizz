@@ -160,4 +160,39 @@ export const jsonGamesRepository = {
 
     return findByCompactWords(text);
   },
+
+   /**
+   * Every game whose name/id/alias appears as whole words in `text`.
+   * Same rules as findFirstInText, but collects all matches instead of
+   * stopping at the first — so a query naming two games excludes both.
+   */
+  findAllInText(text: string): Game[] {
+    const haystack = ` ${normalizeText(text)} `;
+    const found = new Map<string, Game>();
+
+    for (const term of searchTerms) {
+      const at = haystack.indexOf(` ${term.phrase} `);
+      if (at === -1) continue;
+      if (nextWordIsSequel(haystack, at + term.phrase.length + 2)) continue;
+
+      // A game can match via name and id — keep the first, skip repeats.
+      if (!found.has(term.game.id)) found.set(term.game.id, term.game);
+    }
+
+    // Mirror of findByCompactWords without the early return, so "gta5" and
+    // "portal2" are caught too. Kept inline to leave findFirstInText alone.
+    const words = tokenize(text);
+    for (let size = MAX_JOINED_WORDS; size >= 1; size -= 1) {
+      for (let start = 0; start + size <= words.length; start += 1) {
+        const joined = words.slice(start, start + size).join("");
+        const game = compactByName.get(joined);
+        if (!game) continue;
+        if (SEQUEL_TOKENS.has(words[start + size] ?? "")) continue;
+
+        if (!found.has(game.id)) found.set(game.id, game);
+      }
+    }
+
+    return [...found.values()];
+  },
 };

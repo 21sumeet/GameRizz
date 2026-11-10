@@ -24,3 +24,6 @@ export const EMBEDDING_TASK_TYPES = {
 
 export type EmbeddingTaskType =
   (typeof EMBEDDING_TASK_TYPES)[keyof typeof EMBEDDING_TASK_TYPES];
+
+/** How many recommendations the UI shows. */
+export const RECOMMENDATION_COUNT = 6;

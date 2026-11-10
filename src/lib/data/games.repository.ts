@@ -9,6 +9,9 @@ export interface GamesRepository {
   getAll(): Game[];
   findByName(name: string): Game | null;
   findFirstInText(text: string): Game | null;
+
+  /** Every game named in `text` (a query can name more than one). */
+  findAllInText(text: string): Game[];
 }
 
 export function getGamesRepository(): GamesRepository {

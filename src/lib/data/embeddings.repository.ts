@@ -1,5 +1,5 @@
 import embeddingsFile from "@/data/embeddings.json";
-import { EMBEDDING_DIMENSIONS } from "@/config/constants";
+//import { EMBEDDING_DIMENSIONS } from "@/config/constants";
 import type { EmbeddingsFile, StoredEmbedding } from "@/types/embedding";
 
 const file = embeddingsFile as unknown as EmbeddingsFile;
