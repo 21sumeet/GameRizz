@@ -20,17 +20,23 @@ type Status = "idle" | "loading" | "done" | "error";
 export function Recommender() {
   const [text, setText] = useState("");
   const [results, setResults] = useState<Recommendation[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
 
   async function handleSubmit(raw: string) {
     const query = raw.trim();
     if (!query) return;
 
-    setStatus("loading");
+        setStatus("loading");
     try {
       setResults(await fetchRecommendations(query));
       setStatus("done");
-    } catch {
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "couldn't reach my brain rn 😵 try that again in a sec.",
+      );
       setStatus("error");
     }
   }
@@ -73,11 +79,7 @@ export function Recommender() {
         </div>
       )}
 
-      {status === "error" && (
-        <p className="text-sm text-muted">
-          couldn't reach my brain rn 😵 try that again in a sec.
-        </p>
-      )}
+      {status === "error" && <p className="text-sm text-muted">{errorMessage}</p>}
 
       {status === "done" && results.length === 0 && (
         <p className="text-sm text-muted">

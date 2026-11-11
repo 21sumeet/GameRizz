@@ -1,4 +1,5 @@
 import type { RecommendResponse, Recommendation } from "./types";
+import { readErrorMessage } from "@/lib/api/read-error";
 
 /** Browser-side call. The service itself can't be imported here. */
 export async function fetchRecommendations(
@@ -10,8 +11,13 @@ export async function fetchRecommendations(
     body: JSON.stringify({ text }),
   });
 
-  if (!response.ok) {
-    throw new Error(`Recommend request failed (${response.status})`);
+    if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(
+        response,
+        "The recommender is unavailable right now.",
+      ),
+    );
   }
 
   const data = (await response.json()) as RecommendResponse;

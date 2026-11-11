@@ -1,3 +1,4 @@
+import { readErrorMessage } from "@/lib/api/read-error";
 import type { ChatRequest, ChatResponse } from "./types";
 /**
  * Phase 0 placeholder "brain".
@@ -28,7 +29,9 @@ export async function getReply(userText: string): Promise<string> {
   });
 
   if (!response.ok) {
-    throw new Error(`Chat request failed (${response.status})`);
+    throw new Error(
+      await readErrorMessage(response, "The assistant is unavailable right now."),
+    );
   }
 
   const data = (await response.json()) as ChatResponse;
