@@ -1,4 +1,5 @@
 import { recommendGames } from "@/features/recommender/service";
+import { MAX_INPUT_CHARS } from "@/config/constants";
 import type {
   RecommendRequest,
   RecommendResponse,
@@ -10,6 +11,14 @@ export async function POST(request: Request) {
 
   if (!text) {
     return Response.json({ error: "text is required" }, { status: 400 });
+  }
+
+  // Guard before the embedding call: checking the max input from user length.
+  if(text.length > MAX_INPUT_CHARS){
+     return Response.json(
+      { error: `text is too long (max ${MAX_INPUT_CHARS} characters)` },
+      { status: 413 },
+    );
   }
 
   try {

@@ -4,6 +4,8 @@ import { hasAnySpec, parseQuery } from "@/features/chat/spec-parser";
 import { askForSpecs, noGameReply } from "@/features/chat/replies";
 import { compareRequirements, formatVerdict } from "@/features/checker/compare";
 import type { ChatRequest, ChatResponse } from "@/features/chat/types";
+import { MAX_INPUT_CHARS } from "@/config/constants";
+
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ChatRequest | null;
@@ -12,6 +14,14 @@ export async function POST(request: Request) {
   if (!message) {
     return Response.json({ error: "message is required" }, { status: 400 });
   }
+
+  // Guard before the api call: checking the max input from user length..
+  if (message.length > MAX_INPUT_CHARS) {
+    return Response.json(
+      { error: `message is too long (max ${MAX_INPUT_CHARS} characters)` },
+      { status: 413 },
+    );
+  } 
 
   try {
     const reply = await buildReply(message);

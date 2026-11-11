@@ -27,3 +27,10 @@ export type EmbeddingTaskType =
 
 /** How many recommendations the UI shows. */
 export const RECOMMENDATION_COUNT = 6;
+
+
+/**
+ * Max characters accepted by the AI-backed API routes. 
+ * this is to set max input from user
+ */
+export const MAX_INPUT_CHARS = 500;
