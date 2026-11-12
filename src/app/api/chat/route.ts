@@ -1,10 +1,11 @@
 import { chatComplete } from "@/lib/ai/client";
 import { CHECKER_PROMPT, SYSTEM_PROMPT } from "@/features/chat/persona";
-import { hasAnySpec, parseQuery } from "@/features/chat/spec-parser";
+import { hasAnySpec, parseQuery , resolveContext} from "@/features/chat/spec-parser";
 import { askForSpecs, noGameReply } from "@/features/chat/replies";
 import { compareRequirements, formatVerdict } from "@/features/checker/compare";
-import type { ChatRequest, ChatResponse } from "@/features/chat/types";
-import { MAX_INPUT_CHARS } from "@/config/constants";
+import type { ChatRequest, ChatResponse, ChatHistory } from "@/features/chat/types";
+import {CHAT_HISTORY_LIMIT,  MAX_INPUT_CHARS } from "@/config/constants";
+import { spec } from "node:test/reporters";
 
 
 export async function POST(request: Request) {
@@ -23,8 +24,9 @@ export async function POST(request: Request) {
     );
   } 
 
+  const history = readHistory(body)
   try {
-    const reply = await buildReply(message);
+    const reply = await buildReply(message , history);
     return Response.json({ reply } satisfies ChatResponse);
   } catch (error) {
     console.error("[api/chat]", error);
@@ -45,8 +47,18 @@ export async function POST(request: Request) {
  * 2. game found, but a part the user named cannot be placed -> ask, no verdict.
  * 3. no such game -> say so, no verdict.
  */
-async function buildReply(message: string): Promise<string> {
-  const { game, specs, unresolved } = parseQuery(message);
+async function buildReply(message: string, history: ChatHistory[] = [],): Promise<string> {
+
+  const current = parseQuery(message);
+  const {game : carriedGame , specs : carriedSpecs} = resolveContext(
+    history.filter((turn)=> turn.role ==="user").map((turn)=> turn.content)
+  );
+
+  //new message overwrite old one while older msg/turns fill the gaps for chat history
+  const game = current.game ?? carriedGame;
+  const specs = {...carriedSpecs, ...current.specs};
+  const {unresolved} = current;
+  
   const talkingAboutPc = hasAnySpec(specs) || unresolved.length > 0;
   
   // door 3 : no such game -> say so, no verdict.
@@ -54,6 +66,7 @@ async function buildReply(message: string): Promise<string> {
     if (!talkingAboutPc) {
       return chatComplete([
         { role: "system", content: SYSTEM_PROMPT },
+        ...history,
         { role: "user", content: message },
       ]);
     }
@@ -78,6 +91,7 @@ async function buildReply(message: string): Promise<string> {
   if (!game || !hasAnySpec(specs)) {
     return chatComplete([
       { role: "system", content: SYSTEM_PROMPT },
+      ...history,
       { role: "user", content: message },
     ]);
   }
@@ -86,6 +100,27 @@ async function buildReply(message: string): Promise<string> {
   const verdict = formatVerdict(result);
   return chatComplete([
     { role: "system", content: CHECKER_PROMPT },
+    ...history,
     { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
   ]);
+}
+
+/**
+// Ignore invalid messages, keep only the latest turns, and limit message length.
+// History comes from the browser, so validate it before using it.
+ */
+function readHistory(body: ChatRequest | null): ChatHistory[] {
+  if (!Array.isArray(body?.history)) return [];
+
+  return body.history
+    .filter(
+      (turn): turn is ChatHistory =>
+        (turn?.role === "user" || turn?.role === "assistant") &&
+        typeof turn?.content === "string",
+    )
+    .slice(-CHAT_HISTORY_LIMIT)
+    .map((turn) => ({
+      role: turn.role,
+      content: turn.content.slice(0, MAX_INPUT_CHARS),
+    }));
 }

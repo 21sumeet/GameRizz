@@ -1,5 +1,5 @@
 import { readErrorMessage } from "@/lib/api/read-error";
-import type { ChatRequest, ChatResponse } from "./types";
+import type { ChatRequest, ChatResponse, ChatHistory } from "./types";
 /**
  * Phase 0 placeholder "brain".
  *
@@ -19,8 +19,8 @@ import type { ChatRequest, ChatResponse } from "./types";
  * Runs in the browser: calls our own API route so the Groq key stays server-side.
  * No conversation history yet — only the newest message is sent.
  */
-export async function getReply(userText: string): Promise<string> {
-  const body: ChatRequest = { message: userText };
+export async function getReply(userText: string , history : ChatHistory[] =[]): Promise<string> {
+  const body: ChatRequest = { message: userText, history };
 
   const response = await fetch("/api/chat", {
     method: "POST",

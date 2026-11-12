@@ -216,3 +216,25 @@ export function hasAnySpec(specs: UserPcSpecs): boolean {
     typeof specs.storageGB === "number"
   );
 }
+
+// Holds the game and PC specs mentioned in the conversation.
+export interface ChatContext {
+  game: Game | null;
+  specs: UserPcSpecs;
+}
+
+
+// Reuses details from previous messages. New details override old ones,
+// while previously provided details are kept if not mentioned again.
+export function resolveContext(history: string[]): ChatContext {
+  let game: Game | null = null;
+  const specs: UserPcSpecs = {};
+
+  for (const turn of history) {
+    const parsed = parseQuery(turn);
+    if (parsed.game) game = parsed.game;
+    Object.assign(specs, parsed.specs);
+  }
+
+  return { game, specs };
+}

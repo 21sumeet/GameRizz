@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChatBubble } from "./chat-bubble";
 import { ChatInput } from "./chat-input";
 import { getReply } from "../service";
-import type { ChatMessage } from "../types";
+import type { ChatMessage, ChatHistory } from "../types";
 
 const GREETING: ChatMessage = {
   id: "greeting",
@@ -19,6 +19,14 @@ const SUGGESTIONS = [
   "Will Hades II run on a GTX 1050 Ti?",
   "Is 8GB RAM enough for Elden Ring?",
 ];
+
+
+//used to send prev msg to history
+function toHistory(messages: ChatMessage[]): ChatHistory[] {
+  return messages
+    .filter((message) => message.id !== GREETING.id)
+    .map((message) => ({ role: message.role, content: message.content }));
+}
 
 export function ChatWindow() {
   const [messages, setMessages] = useState<ChatMessage[]>([GREETING]);
@@ -34,6 +42,7 @@ export function ChatWindow() {
   }, [messages, isThinking]);
 
   async function handleSend(text: string) {
+    const history = toHistory(messages);
     setMessages((current) => [
       ...current,
       { id: crypto.randomUUID(), role: "user", content: text },
@@ -41,7 +50,7 @@ export function ChatWindow() {
     setIsThinking(true);
 
     try {
-      const reply = await getReply(text);
+      const reply = await getReply(text , history);
       setMessages((current) => [
         ...current,
         { id: crypto.randomUUID(), role: "assistant", content: reply },

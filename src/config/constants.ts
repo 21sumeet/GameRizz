@@ -34,3 +34,10 @@ export const RECOMMENDATION_COUNT = 6;
  * this is to set max input from user
  */
 export const MAX_INPUT_CHARS = 500;
+
+
+/**
+ * How many earlier turns/history we accept from the client. Keeps the prompt bounded —
+ * history is attacker-controlled input, same as the message body.
+ */
+export const CHAT_HISTORY_LIMIT = 10;
