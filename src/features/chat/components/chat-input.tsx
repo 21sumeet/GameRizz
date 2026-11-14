@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, type KeyboardEvent } from "react";
+import { MAX_INPUT_CHARS } from "@/config/constants";
 
 import { Button } from "@/components/ui/button";
 
@@ -37,6 +38,7 @@ export function ChatInput({
     <form onSubmit={handleSubmit} className="flex items-end gap-2">
       <textarea
         value={value}
+        maxLength={MAX_INPUT_CHARS}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
         rows={1}

@@ -5,7 +5,7 @@ import { askForSpecs, noGameReply } from "@/features/chat/replies";
 import { compareRequirements, formatVerdict } from "@/features/checker/compare";
 import type { ChatRequest, ChatResponse, ChatHistory } from "@/features/chat/types";
 import {CHAT_HISTORY_LIMIT,  MAX_INPUT_CHARS } from "@/config/constants";
-import { spec } from "node:test/reporters";
+//import { spec } from "node:test/reporters";
 
 
 export async function POST(request: Request) {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     );
   } 
 
-  const history = readHistory(body)
+  const history = readHistory(body);
   try {
     const reply = await buildReply(message , history);
     return Response.json({ reply } satisfies ChatResponse);

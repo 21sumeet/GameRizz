@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MAX_INPUT_CHARS } from "@/config/constants";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ export function Recommender() {
       >
         <Input
           value={text}
+          maxLength={MAX_INPUT_CHARS}
           onChange={(event) => setText(event.target.value)}
           placeholder="Describe what you want to play…"
           disabled={status === "loading"}
