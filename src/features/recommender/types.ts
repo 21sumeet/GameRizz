@@ -5,6 +5,8 @@ export interface Recommendation {
   game: Game;
   /** Cosine similarity to the query. For debugging/ranking only — do NOT show this to users. */
   score: number;
+  /** One short line explaining the match. null when there is nothing honest to say. */
+  why: string | null;
 }
 
 /** Wire format for POST /api/recommend. */

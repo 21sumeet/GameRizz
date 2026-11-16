@@ -9,6 +9,7 @@ import { getEmbeddingsRepository } from "@/lib/data/embeddings.repository";
 import { getGamesRepository } from "@/lib/data/games.repository";
 import { topN } from "./similarity";
 import type { Recommendation } from "./types";
+import { buildWhyMatch } from "./why-match";
 
 /**
  * Text -> query vector -> nearest stored game vectors -> ranked games.
@@ -50,11 +51,10 @@ export async function recommendGames(
 
   // Don't hand back a game the user just told us they liked. Note: short alias
   // keys like "civ" mean "I like civ games" excludes Civilization VI — intended.
-  const named = new Set(
-    getGamesRepository()
-      .findAllInText(query)
-      .map((game) => game.id),
-  );
+  // We keep the Game objects, not just the ids, so the same lookup can explain
+  // why each result matches.
+  const likedGames = getGamesRepository().findAllInText(query);
+  const named = new Set(likedGames.map((game) => game.id));
   const filtered = candidates.filter((item) => !named.has(item.id));
 
   const hits = topN(queryVector, filtered, limit);
@@ -70,7 +70,7 @@ export async function recommendGames(
   for (const hit of hits) {
     const game = byId.get(hit.id);
     if (!game) continue; // present in embeddings but not in the catalog
-    recommendations.push({ game, score: hit.score });
+    recommendations.push({ game, score: hit.score , why: buildWhyMatch(game, { query, likedGames }),});
   }
   return recommendations;
 }

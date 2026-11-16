@@ -7,8 +7,11 @@ export function GameCard({ recommendation }: { recommendation: Recommendation })
 
   return (
     <Card className="flex flex-col gap-2 p-4">
-      <h3 className="font-semibold text-foreground">{game.name}</h3>
+            <h3 className="font-semibold text-foreground">{game.name}</h3>
       <p className="text-xs text-muted">{game.genres.join(" · ")}</p>
+      {recommendation.why && (
+        <p className="text-xs text-primary">{recommendation.why}</p>
+      )}
       <p className="line-clamp-3 text-sm text-muted">{game.description}</p>
     </Card>
   );
