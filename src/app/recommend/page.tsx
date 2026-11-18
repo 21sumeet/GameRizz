@@ -5,8 +5,7 @@ export default function RecommendPage() {
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-foreground">Recommender</h1>
         <p className="text-sm text-muted">
-          Describe what you feel like playing and we'll find games that fit.
-        </p>
+          Describe what you feel like playing and we&apos;ll find games that fit.        </p>
       </div>
       <Recommender />
     </div>

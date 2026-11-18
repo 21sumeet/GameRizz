@@ -54,6 +54,10 @@ const STORAGE_KEYWORD_PATTERN =
 
 const BARE_GB_PATTERN = /\b(\d+(?:\.\d+)?)\s*gb\b/i;
 
+/** does this text contain "SSD", "free space", "drive". */
+const STORAGE_WORD_PATTERN = /\b(?:ssd|hdd|nvme|storage|space|drive)\b/i;
+
+
 /** Catches a CPU/GPU the user named but we couldn't read a model from. */
 const LOOSE_CPU_PATTERN = /\b(?:i[3579]\b|ryzen\b|[3579]\s+(?:intel\s+)?core\b)/i;
 const LOOSE_GPU_PATTERN =
@@ -143,6 +147,12 @@ function extractRam(text: string): Span | null {
 
   const amount = toNumber(bare[1]);
   if (amount === null || amount < 4 || amount > 512) return null;
+
+  // "500GB SSD" / "100GB free space": the number belongs to storage, so leave
+  // it for extractStorage. Stop at the next digit so a later "500GB" can't
+  // retroactively claim this one.
+  const tail = text.slice(bare.index + bare[0].length).split(/\d/)[0] ?? "";
+  if (STORAGE_WORD_PATTERN.test(tail)) return null;
 
   return {
     value: String(amount),
