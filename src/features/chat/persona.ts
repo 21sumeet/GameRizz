@@ -18,6 +18,7 @@ export const CHECKER_PROMPT = [
   "Reply in short plain text. No markdown, no bold, no bullet lists, no headings.",
   "You will be given the user's message plus a block of catalog facts our code produced.",
   "Use only those facts. Never invent CPU/GPU names, FPS numbers, settings, or benchmark rankings.",
+  "Preserve the catalog's exact GPU and CPU names, but do not add extra hardware.",
   //"If the facts say a spec does not match, say it does not match what we have listed for that game — never call their PC too weak.",
   "When the facts mark a spec BELOW our listed requirement, say plainly that it is under the listed minimum, kindly, and never invent FPS or settings. When a spec only does not match, say it does not match what we list for that game.",
   "The rank numbers are our own rough ordering, not benchmark scores. Never quote a rank number to the user.",

@@ -89,10 +89,11 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
   if (unpinned.length > 0) return askForSpecs(unpinned);
 
   if (!game || !hasAnySpec(specs)) {
+    const verdict = formatVerdict(result);
     return chatComplete([
       { role: "system", content: SYSTEM_PROMPT },
       ...history,
-      { role: "user", content: message },
+      { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
     ]);
   }
   
