@@ -1,11 +1,12 @@
 import { chatComplete } from "@/lib/ai/client";
 import { CHECKER_PROMPT, SYSTEM_PROMPT } from "@/features/chat/persona";
 import { hasAnySpec, parseQuery , resolveContext} from "@/features/chat/spec-parser";
-import { askForSpecs, noGameReply } from "@/features/chat/replies";
+import { askForSpecs, noGameReply, specsUnavailableReply } from "@/features/chat/replies";
 import { compareRequirements, formatVerdict } from "@/features/checker/compare";
+import { findGameOnSteam } from "@/features/checker/requirements/from-steam";
 import type { ChatRequest, ChatResponse, ChatHistory } from "@/features/chat/types";
+import type { CheckableGame } from "@/types/game";
 import {CHAT_HISTORY_LIMIT,  MAX_INPUT_CHARS } from "@/config/constants";
-//import { spec } from "node:test/reporters";
 
 
 export async function POST(request: Request) {
@@ -42,10 +43,11 @@ export async function POST(request: Request) {
  * and the model only rewords it. there are 3 ways of handling names as door1 , 2 and 3
  */
 /**
- * Three doors:
- * 1. game + every named part is a real row in our tables -> our numbers decide, the model only words it.
+ * Four doors:
+ * 1. game in our tables + every named part is a real row -> our numbers decide, the model only words it.
  * 2. game found, but a part the user named cannot be placed -> ask, no verdict.
- * 3. no such game -> say so, no verdict.
+ * 3. game not in our catalog -> try Steam once, then use its numbers the same way.
+ * 4. nothing anywhere -> say so, no verdict.
  */
 async function buildReply(message: string, history: ChatHistory[] = [],): Promise<string> {
 
@@ -54,14 +56,35 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
     history.filter((turn)=> turn.role ==="user").map((turn)=> turn.content)
   );
 
-  //new message overwrite old one while older msg/turns fill the gaps for chat history
-  const game = current.game ?? carriedGame;
   const specs = {...carriedSpecs, ...current.specs};
   const {unresolved} = current;
-  
+
   const talkingAboutPc = hasAnySpec(specs) || unresolved.length > 0;
-  
-  // door 3 : no such game -> say so, no verdict.
+
+  // Door 3: this message did not name one of our games. Before falling back to
+  // a game from earlier in the chat, check whether it is really a new question
+  // about a game we do not have - only Steam can tell us that.
+  let game: CheckableGame | null = current.game;
+  let fromSteam = false;
+
+  if (!game && talkingAboutPc) {
+    const steam = await findGameOnSteam(message);
+
+    if (steam.status === "found") {
+      game = steam.game;
+      fromSteam = true;
+    } else if (steam.status === "no-specs") {
+      return specsUnavailableReply();
+    } else if (steam.status === "game-not-on-steam") {
+      return noGameReply();
+    } else {
+      // "no-game" or "unknown": nothing new was named, so this is the spec
+      // answer to our own question. Continue the older game.
+      game = carriedGame;
+    }
+  }
+
+  // Door 4 : nothing in the catalog and nothing readable on Steam -> say so, no verdict.
   if (!game) {
     if (!talkingAboutPc) {
       return chatComplete([
@@ -73,6 +96,7 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
     return noGameReply();
   }
 
+  const source = fromSteam ? "steam" : "catalog";
 
   // Door 2: named but not placeable ("i5" with no number, or a chip not in our
   // table). "mismatch" is exactly that case - checkField only uses it when the
@@ -86,10 +110,12 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
         .map((check) => check.field),
     ]),
   ];
-  if (unpinned.length > 0) return askForSpecs(unpinned);
+  // A gap in OUR tier tables is not the user's wording problem, so never ask
+  // about a Steam game - let the honest "could not rank that" verdict through.
+  if (!fromSteam && unpinned.length > 0) return askForSpecs(unpinned);
 
-  if (!game || !hasAnySpec(specs)) {
-    const verdict = formatVerdict(result);
+  if (!hasAnySpec(specs)) {
+    const verdict = formatVerdict(result, source);
     return chatComplete([
       { role: "system", content: SYSTEM_PROMPT },
       ...history,
@@ -98,7 +124,7 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
   }
   
   //door 1
-  const verdict = formatVerdict(result);
+  const verdict = formatVerdict(result, source);
   return chatComplete([
     { role: "system", content: CHECKER_PROMPT },
     ...history,

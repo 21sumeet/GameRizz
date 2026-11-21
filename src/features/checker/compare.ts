@@ -1,4 +1,4 @@
-import type { Game, GameSpecBlock } from "@/types/game";
+import type { Game, CheckableGame, GameSpecBlock } from "@/types/game";
 import type { UserPcSpecs } from "@/types/pc";
 import type { TieredField } from "@/types/tier";
 import { getTiersRepository } from "@/lib/data/tiers.repository";
@@ -28,7 +28,8 @@ export interface SpecCheck {
 }
 
 export interface CompareResult {
-  game: Game;
+  //game: Game;
+  game: CheckableGame;
   /** Checks against `requirements.minimum`. */
   minimum: SpecCheck[];
   /** Checks against `requirements.recommended`; empty when the game has none. */
@@ -207,7 +208,7 @@ export function countProvidedSpecs(specs: UserPcSpecs): number {
  * Compare what the user said against what the catalog lists.
  * Pure function: same inputs always produce the same output.
  */
-export function compareRequirements(specs: UserPcSpecs, game: Game): CompareResult {
+export function compareRequirements(specs: UserPcSpecs, game: CheckableGame): CompareResult {
   const minimum = runChecks(specs, game.requirements.minimum);
   const recommendedBlock = game.requirements.recommended;
   const recommended = recommendedBlock ? runChecks(specs, recommendedBlock) : [];
@@ -231,23 +232,27 @@ const STATUS_WORDS: Record<SpecStatus, string> = {
   unknown: "unknown",
 };
 
-function describeChecks(checks: SpecCheck[]): string[] {
+function describeChecks(checks: SpecCheck[], owner: string): string[] {
   return checks.map((check) => {
     if (check.status === "unknown") {
-      return `- ${check.label}: user did not say (catalog lists ${check.requiredValue})`;
+      return `- ${check.label}: user did not say (${owner} lists ${check.requiredValue})`;
     }
 
     if (check.userTier !== undefined && check.requiredTier !== undefined) {
       const rank = `rank ${check.userTier} of 9-ish, bar rank ${check.requiredTier}`;
-      return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue} (${rank})`;
+      return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} ${owner} listed ${check.requiredValue} (${rank})`;
     }
 
-    return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue}`;
+    return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} ${owner} listed ${check.requiredValue}`;
   });
 }
 
-function describeBlock(title: string, block: GameSpecBlock | null): string[] {
-  if (!block) return [`${title}: none listed in our catalog`];
+function describeBlock(
+  title: string,
+  block: GameSpecBlock | null,
+  noneLabel: string,
+): string[] {
+  if (!block) return [`${title}: ${noneLabel}`];
   return [
     `${title}:`,
     `- CPU: ${block.cpu}`,
@@ -257,62 +262,160 @@ function describeBlock(title: string, block: GameSpecBlock | null): string[] {
   ];
 }
 
+/** Which source the facts came from. Wording must not claim we curated a Steam game. */
+export type RequirementSource = "catalog" | "steam";
+
 /**
  * Turn a CompareResult into plain-text facts. The LLM only rewrites this text;
  * it never decides the answer, so the verdict can't be invented.
  */
-export function formatVerdict(result: CompareResult): string {
+export function formatVerdict(
+  result: CompareResult,
+  source: RequirementSource = "catalog",
+): string {
   const { game } = result;
+  const owner = source === "steam" ? "Steam's" : "our";
+  const heading = source === "steam" ? "STEAM" : "CATALOG";
+  const noneLabel =
+    source === "steam" ? "none listed on Steam" : "none listed in our catalog";
+  const foundLabel =
+    source === "steam" ? "GAME FOUND ON STEAM" : "GAME FOUND IN OUR CATALOG";
 
   const lines: string[] = [
-    `GAME FOUND IN OUR CATALOG: ${game.name} (${game.releaseYear})`,
+    `${foundLabel}: ${game.name} (${game.releaseYear})`,
     "",
-    ...describeBlock("CATALOG MINIMUM REQUIREMENTS", game.requirements.minimum),
+    ...describeBlock(`${heading} MINIMUM REQUIREMENTS`, game.requirements.minimum, noneLabel),
     "",
     ...describeBlock(
-      "CATALOG RECOMMENDED REQUIREMENTS",
+      `${heading} RECOMMENDED REQUIREMENTS`,
       game.requirements.recommended,
+      noneLabel,
     ),
     "",
     "HOW THE USER'S SPECS LINE UP WITH THE MINIMUM:",
-    ...describeChecks(result.minimum),
+    ...describeChecks(result.minimum, owner),
   ];
 
   if (result.recommended.length > 0) {
     lines.push(
       "",
       "HOW THE USER'S SPECS LINE UP WITH THE RECOMMENDED:",
-      ...describeChecks(result.recommended),
+      ...describeChecks(result.recommended, owner),
     );
   }
 
   lines.push("", "VERDICT:");
 
-    if (result.comparedCount === 0) {
+  if (result.comparedCount === 0) {
     lines.push(
       "- The user did not give any specs, so we cannot compare. Ask for CPU, GPU, RAM and free storage.",
     );
   } else if (result.isBelowMinimum) {
     lines.push(
-      "- At least one spec the user gave ranks BELOW our listed minimum.",
+      `- At least one spec the user gave ranks BELOW ${owner} listed minimum.`,
       "- Say plainly that their PC is under the listed minimum for this game. Be kind about it, but do not hedge.",
       "- Use only the ABOVE/EQUALS/BELOW marks above. Never invent FPS numbers, settings, or benchmark names.",
     );
   } else if (result.meetsMinimum && result.meetsRecommended) {
     lines.push(
-      "- Every spec the user gave is at or above our listed recommended requirements.",
+      `- Every spec the user gave is at or above ${owner} listed recommended requirements.`,
     );
   } else if (result.meetsMinimum) {
     lines.push(
-      "- Every spec the user gave clears our listed minimum requirements.",
+      `- Every spec the user gave clears ${owner} listed minimum requirements.`,
       "- They do not clear the recommended ones: name the fields marked BELOW in the recommended section above.",
     );
   } else {
     lines.push(
-      "- At least one spec the user gave could not be ranked and is not wording we list for this game.",
+      `- At least one spec the user gave could not be ranked and is not wording ${owner} lists for this game.`,
       "- Say we could not match that spec against our list. Do NOT call their PC too weak.",
     );
   }
 
   return lines.join("\n");
 }
+// function describeChecks(checks: SpecCheck[]): string[] {
+//   return checks.map((check) => {
+//     if (check.status === "unknown") {
+//       return `- ${check.label}: user did not say (catalog lists ${check.requiredValue})`;
+//     }
+
+//     if (check.userTier !== undefined && check.requiredTier !== undefined) {
+//       const rank = `rank ${check.userTier} of 9-ish, bar rank ${check.requiredTier}`;
+//       return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue} (${rank})`;
+//     }
+
+//     return `- ${check.label}: user said ${check.userValue} - ${STATUS_WORDS[check.status]} our listed ${check.requiredValue}`;
+//   });
+// }
+
+// function describeBlock(title: string, block: GameSpecBlock | null): string[] {
+//   if (!block) return [`${title}: none listed in our catalog`];
+//   return [
+//     `${title}:`,
+//     `- CPU: ${block.cpu}`,
+//     `- GPU: ${block.gpu}`,
+//     `- RAM: ${formatNumber(block.ramGB, "GB")}`,
+//     `- Storage: ${formatNumber(block.storageGB, "GB")}`,
+//   ];
+// }
+
+// /**
+//  * Turn a CompareResult into plain-text facts. The LLM only rewrites this text;
+//  * it never decides the answer, so the verdict can't be invented.
+//  */
+// export function formatVerdict(result: CompareResult): string {
+//   const { game } = result;
+
+//   const lines: string[] = [
+//     `GAME FOUND IN OUR CATALOG: ${game.name} (${game.releaseYear})`,
+//     "",
+//     ...describeBlock("CATALOG MINIMUM REQUIREMENTS", game.requirements.minimum),
+//     "",
+//     ...describeBlock(
+//       "CATALOG RECOMMENDED REQUIREMENTS",
+//       game.requirements.recommended,
+//     ),
+//     "",
+//     "HOW THE USER'S SPECS LINE UP WITH THE MINIMUM:",
+//     ...describeChecks(result.minimum),
+//   ];
+
+//   if (result.recommended.length > 0) {
+//     lines.push(
+//       "",
+//       "HOW THE USER'S SPECS LINE UP WITH THE RECOMMENDED:",
+//       ...describeChecks(result.recommended),
+//     );
+//   }
+
+//   lines.push("", "VERDICT:");
+
+//     if (result.comparedCount === 0) {
+//     lines.push(
+//       "- The user did not give any specs, so we cannot compare. Ask for CPU, GPU, RAM and free storage.",
+//     );
+//   } else if (result.isBelowMinimum) {
+//     lines.push(
+//       "- At least one spec the user gave ranks BELOW our listed minimum.",
+//       "- Say plainly that their PC is under the listed minimum for this game. Be kind about it, but do not hedge.",
+//       "- Use only the ABOVE/EQUALS/BELOW marks above. Never invent FPS numbers, settings, or benchmark names.",
+//     );
+//   } else if (result.meetsMinimum && result.meetsRecommended) {
+//     lines.push(
+//       "- Every spec the user gave is at or above our listed recommended requirements.",
+//     );
+//   } else if (result.meetsMinimum) {
+//     lines.push(
+//       "- Every spec the user gave clears our listed minimum requirements.",
+//       "- They do not clear the recommended ones: name the fields marked BELOW in the recommended section above.",
+//     );
+//   } else {
+//     lines.push(
+//       "- At least one spec the user gave could not be ranked and is not wording we list for this game.",
+//       "- Say we could not match that spec against our list. Do NOT call their PC too weak.",
+//     );
+//   }
+
+//   return lines.join("\n");
+// }

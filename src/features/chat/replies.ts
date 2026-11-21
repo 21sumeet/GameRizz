@@ -17,3 +17,11 @@ export function askForSpecs(fields: SpecField[]): string {
 export function noGameReply(): string {
   return "I don't have that game in my mind yet, so I can't check it properly — and I'd rather say that than make something up. Send me the exact title and I'll tell you if it's in there.";
 }
+
+/**
+ * Door 3 with a Steam attempt behind it: the game is on Steam, but its
+ * requirements were missing or garbled. Say so; never guess a number.
+ */
+export function specsUnavailableReply(): string {
+  return "I found that game on Steam, but its system requirements weren't readable there, so I can't check it properly — and I'd rather say that than make something up.";
+}
