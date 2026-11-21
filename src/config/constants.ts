@@ -41,3 +41,13 @@ export const MAX_INPUT_CHARS = 500;
  * history is attacker-controlled input, same as the message body.
  */
 export const CHAT_HISTORY_LIMIT = 10;
+
+/**
+ * Steam's store API is free and needs no key, but it is undocumented and rate-limits
+ * without warning. Keep each attempt short so a slow Steam never stalls a chat reply.
+ */
+export const STEAM_TIMEOUT_MS = 8000;
+export const STEAM_MAX_ATTEMPTS = 3;
+
+/** How long a Steam lookup stays warm in memory (per server process). */
+export const STEAM_CACHE_TTL_MS = 6 * 60 * 60 * 1000;

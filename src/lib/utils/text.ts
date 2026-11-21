@@ -21,3 +21,21 @@ export function tokenize(value: string): string[] {
   const normalized = normalizeText(value);
   return normalized.length === 0 ? [] : normalized.split(" ");
 }
+
+/**
+ * Steam sends its requirements as HTML. Keep the words, drop the markup.
+ * Line breaks matter: each requirement sits on its own line.
+ */
+export function stripHtml(value: string): string {
+  return value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/li>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{2,}/g, "\n")
+    .trim();
+}

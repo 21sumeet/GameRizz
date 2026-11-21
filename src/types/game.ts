@@ -33,3 +33,9 @@ export interface Game {
   source: string;
   specsVerified: boolean;
 }
+
+/**
+ * The only parts of a game the checker needs for steam search.
+ * Catalog games satisfy this, and so does a game found on Steam.
+ */
+export type CheckableGame = Pick<Game, "name" | "releaseYear" | "requirements">;
