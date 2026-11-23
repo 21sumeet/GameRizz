@@ -1,9 +1,11 @@
 export type ChatRole = "user" | "assistant";
+import type { VerdictTone } from "@/features/checker/compare";
 
 export interface ChatMessage {
   id: string;
   role: ChatRole;
   content: string;
+  tone?: VerdictTone;
 }
 
 // A previous message in the conversation.
@@ -21,4 +23,5 @@ export interface ChatRequest {
 
 export interface ChatResponse {
   reply: string;
+  tone?: VerdictTone;
 }

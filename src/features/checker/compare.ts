@@ -44,6 +44,27 @@ export interface CompareResult {
   isBelowMinimum: boolean;
 }
 
+/**
+ * How the UI should colour a reply. Derived from CompareResult booleans,
+ * never from the model's wording — prose can't be trusted to be that precise.
+ */
+export type VerdictTone = "yes" | "caution" | "no" | "unknown" | "info";
+/**
+ * Mirrors the branch order in formatVerdict below, so the colour always
+ * agrees with the text that was sent to the model.
+ */
+export function toneOf(result: CompareResult): VerdictTone {
+  // Only asked for specs - we never compared anything.
+  if (result.comparedCount === 0) return "info";
+  // A spec we could positively rank is too weak.
+  if (result.isBelowMinimum) return "no";
+  // Something couldn't be ranked, so we refuse to claim either way.
+  if (!result.meetsMinimum) return "unknown";
+  // Clears the minimum, but not the recommended bar.
+  if (result.recommended.length > 0 && !result.meetsRecommended) return "caution";
+  return "yes";
+}
+
 const LABELS: Record<SpecField, string> = {
   cpu: "CPU",
   gpu: "GPU",

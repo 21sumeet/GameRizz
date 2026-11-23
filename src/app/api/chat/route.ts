@@ -2,12 +2,17 @@ import { chatComplete } from "@/lib/ai/client";
 import { CHECKER_PROMPT, SYSTEM_PROMPT } from "@/features/chat/persona";
 import { hasAnySpec, parseQuery , resolveContext} from "@/features/chat/spec-parser";
 import { askForSpecs, noGameReply, specsUnavailableReply } from "@/features/chat/replies";
-import { compareRequirements, formatVerdict } from "@/features/checker/compare";
-import { findGameOnSteam } from "@/features/checker/requirements/from-steam";
+import { compareRequirements, formatVerdict, toneOf } from "@/features/checker/compare";
+import type { VerdictTone } from "@/features/checker/compare";import { findGameOnSteam } from "@/features/checker/requirements/from-steam";
 import type { ChatRequest, ChatResponse, ChatHistory } from "@/features/chat/types";
 import type { CheckableGame } from "@/types/game";
 import {CHAT_HISTORY_LIMIT,  MAX_INPUT_CHARS } from "@/config/constants";
 
+/** A reply plus the code-decided colour it should get in the UI. */
+interface ChatReply {
+  reply: string;
+  tone: VerdictTone;
+}
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ChatRequest | null;
@@ -27,8 +32,8 @@ export async function POST(request: Request) {
 
   const history = readHistory(body);
   try {
-    const reply = await buildReply(message , history);
-    return Response.json({ reply } satisfies ChatResponse);
+    const {reply, tone} = await buildReply(message , history);
+    return Response.json({ reply, tone } satisfies ChatResponse);
   } catch (error) {
     console.error("[api/chat]", error);
     return Response.json(
@@ -49,8 +54,7 @@ export async function POST(request: Request) {
  * 3. game not in our catalog -> try Steam once, then use its numbers the same way.
  * 4. nothing anywhere -> say so, no verdict.
  */
-async function buildReply(message: string, history: ChatHistory[] = [],): Promise<string> {
-
+async function buildReply(message: string, history: ChatHistory[] = [],): Promise<ChatReply> {
   const current = parseQuery(message);
   const {game : carriedGame , specs : carriedSpecs} = resolveContext(
     history.filter((turn)=> turn.role ==="user").map((turn)=> turn.content)
@@ -74,9 +78,9 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
       game = steam.game;
       fromSteam = true;
     } else if (steam.status === "no-specs") {
-      return specsUnavailableReply();
+      return { reply: specsUnavailableReply(), tone: "info" };
     } else if (steam.status === "game-not-on-steam") {
-      return noGameReply();
+      return { reply: noGameReply(), tone: "info" }
     } else {
       // "no-game" or "unknown": nothing new was named, so this is the spec
       // answer to our own question. Continue the older game.
@@ -87,13 +91,16 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
   // Door 4 : nothing in the catalog and nothing readable on Steam -> say so, no verdict.
   if (!game) {
     if (!talkingAboutPc) {
-      return chatComplete([
-        { role: "system", content: SYSTEM_PROMPT },
-        ...history,
-        { role: "user", content: message },
-      ]);
+      return {
+        reply : await chatComplete([
+          { role: "system", content: SYSTEM_PROMPT },
+          ...history,
+          { role: "user", content: message },
+          ]),
+        tone : "info"
+      }
     }
-    return noGameReply();
+    return { reply: noGameReply(), tone: "info" };
   }
 
   const source = fromSteam ? "steam" : "catalog";
@@ -112,24 +119,30 @@ async function buildReply(message: string, history: ChatHistory[] = [],): Promis
   ];
   // A gap in OUR tier tables is not the user's wording problem, so never ask
   // about a Steam game - let the honest "could not rank that" verdict through.
-  if (!fromSteam && unpinned.length > 0) return askForSpecs(unpinned);
-
-  if (!hasAnySpec(specs)) {
+  if (!fromSteam && unpinned.length > 0) return {reply :askForSpecs(unpinned), tone : "info"};
+  const tone = toneOf(result);
+    if (!hasAnySpec(specs)) {
     const verdict = formatVerdict(result, source);
-    return chatComplete([
-      { role: "system", content: SYSTEM_PROMPT },
-      ...history,
-      { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
-    ]);
+    return {
+      reply: await chatComplete([
+        { role: "system", content: SYSTEM_PROMPT },
+        ...history,
+        { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
+      ]),
+      tone,
+    };
   }
   
   //door 1
   const verdict = formatVerdict(result, source);
-  return chatComplete([
-    { role: "system", content: CHECKER_PROMPT },
-    ...history,
-    { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
-  ]);
+  return {
+    reply: await chatComplete([
+      { role: "system", content: CHECKER_PROMPT },
+      ...history,
+      { role: "user", content: `User message:\n${message}\n\nCatalog facts:\n${verdict}` },
+    ]),
+    tone,
+  };
 }
 
 /**
