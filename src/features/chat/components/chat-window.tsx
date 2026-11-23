@@ -50,10 +50,10 @@ export function ChatWindow() {
     setIsThinking(true);
 
     try {
-      const reply = await getReply(text , history);
+      const { reply, tone } = await getReply(text , history);
       setMessages((current) => [
         ...current,
-        { id: crypto.randomUUID(), role: "assistant", content: reply },
+        { id: crypto.randomUUID(), role: "assistant", content: reply, tone },
       ]);
         } catch (error) {
       setMessages((current) => [
