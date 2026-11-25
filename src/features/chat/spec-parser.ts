@@ -42,8 +42,7 @@ const GPU_PATTERN =
 
 /** "i5 12400", "Intel Core i7-6700", "Ryzen 5 3600X", bare "i5". */
 const CPU_PATTERN =
-  /\b(?:(?:amd|intel)\s+)?(?:(?:core|ryzen)\s+)?(i[3579][\s-]?\d{4,5}[a-z]{0,2}|i[3579]\b|ryzen\s+\d\s+\d{4}[a-z0-9]{0,2})/i;
-
+  /\b(?:(?:amd|intel)\s+)?(?:(?:core|ryzen)\s+)?(i[3579][\s-]?\d{4,5}[a-z]{0,2}\d{0,2}[a-z]{0,2}|i[3579]\b|ryzen\s+\d\s+\d{4}[a-z0-9]{0,2})/i;
 /** "16GB RAM" or "RAM 16GB". */
 const RAM_KEYWORD_PATTERN =
   /\b(\d+(?:\.\d+)?)\s*(gb|tb)\b[^,.;]*?\b(?:ram|memory)\b|\b(?:ram|memory)\b[^,.;]*?\b(\d+(?:\.\d+)?)\s*(gb|tb)\b/i;
