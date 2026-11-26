@@ -8,7 +8,7 @@ const games = catalog as unknown as Game[];
  * Extra phrasings people actually type. Keys are user wording, values are
  * catalog ids. Normalization runs at index-build time, so write keys plainly.
  */
-const ALIASES: Record<string, string> = {
+const Game_popular_shorthands: Record<string, string> = {
   cyberpunk: "cyberpunk-2077",
   cp2077: "cyberpunk-2077",
   "red dead 2": "red-dead-redemption-2",
@@ -66,7 +66,25 @@ const ALIASES: Record<string, string> = {
   // Call of Duty Modern Warfare 2 (2009)
   "cod mw2": "call-of-duty-modern-warfare-2-2009",
   "mw2 2009": "call-of-duty-modern-warfare-2-2009",
-  "modern warfare 2 2009": "call-of-duty-modern-warfare-2-2009"
+  "modern warfare 2 2009": "call-of-duty-modern-warfare-2-2009",
+
+    "darksider": "darksiders",
+  "cod4": "call-of-duty-4-modern-warfare",
+  "cod 4": "call-of-duty-4-modern-warfare",
+  "black ops": "call-of-duty-black-ops",
+  "bl2": "borderlands-2",
+  "nfs mw 2012": "need-for-speed-most-wanted-2012",
+  "nfs hot pursuit": "need-for-speed-hot-pursuit-2010",
+  "dmc4": "devil-may-cry-4",
+  "metal gear rising": "metal-gear-rising-revengeance",
+  "saints row 3": "saints-row-the-third",
+  "arkham asylum": "batman-arkham-asylum",
+  "arkham city": "batman-arkham-city",
+  "kingdoms of amalur": "kingdoms-of-amalur-reckoning",
+  "dao": "dragon-age-origins",
+  "xcom eu": "xcom-enemy-unknown",
+  "civ 5": "civilization-v",
+  "mafia 2": "mafia-2",
 };
 
 /** "Hades II" must not bind to "Hades" — the catalog only has the first game. */
@@ -105,7 +123,7 @@ for (const game of games) {
   register(game.id, game);
 }
 
-for (const [alias, id] of Object.entries(ALIASES)) {
+for (const [alias, id] of Object.entries(Game_popular_shorthands)) {
   const game = games.find((entry) => entry.id === id);
   if (game) register(alias, game);
 }
