@@ -10,6 +10,17 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost: "bg-transparent text-muted hover:text-primary",
 };
 
+const baseClasses =
+  "inline-flex items-center justify-center gap-2 rounded-theme px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50";
+
+/** Shared recipe so links can render as buttons without copying class strings. */
+export function buttonClassNames(
+  variant: ButtonVariant = "primary",
+  className = "",
+) {
+  return `${baseClasses} ${variantClasses[variant]} ${className}`;
+}
+
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: ButtonVariant;
 };
@@ -19,10 +30,5 @@ export function Button({
   className = "",
   ...props
 }: ButtonProps) {
-  return (
-    <button
-      className={`inline-flex items-center justify-center gap-2 rounded-theme px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${variantClasses[variant]} ${className}`}
-      {...props}
-    />
-  );
+  return <button className={buttonClassNames(variant, className)} {...props} />;
 }
